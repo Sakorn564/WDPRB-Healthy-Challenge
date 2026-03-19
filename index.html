@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WDPRB Healthy Plate Challenge 🍽️</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Prompt', sans-serif;
+    background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 30%, #0d2137 60%, #001a0d 100%);
+    min-height: 100vh;
+    color: white;
+    overflow-x: hidden;
+  }
+
+  /* Animated background particles */
+  .bg-particles {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute; border-radius: 50%;
+    animation: float linear infinite;
+    opacity: 0.15;
+  }
+  @keyframes float {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.15; }
+    90% { opacity: 0.15; }
+    100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+  }
+
+  .container {
+    position: relative; z-index: 1;
+    max-width: 900px; margin: 0 auto; padding: 20px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center; padding: 30px 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0,255,136,0.3);
+    border-radius: 24px; margin-bottom: 25px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 40px rgba(0,255,136,0.1);
+  }
+  .header .logo { font-size: 3rem; margin-bottom: 8px; }
+  .header h1 {
+    font-size: 1.8rem; font-weight: 800;
+    background: linear-gradient(90deg, #00ff88, #00ccff, #ff6b9d);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header p { color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-top: 5px; }
+
+  /* Score Bar */
+  .score-bar {
+    display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;
+  }
+  .score-card {
+    flex: 1; min-width: 140px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px; padding: 15px; text-align: center;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+  }
+  .score-card.glow-green { border-color: rgba(0,255,136,0.5); box-shadow: 0 0 20px rgba(0,255,136,0.2); }
+  .score-card.glow-blue  { border-color: rgba(0,204,255,0.5); box-shadow: 0 0 20px rgba(0,204,255,0.2); }
+  .score-card.glow-pink  { border-color: rgba(255,107,157,0.5); box-shadow: 0 0 20px rgba(255,107,157,0.2); }
+  .score-card.glow-gold  { border-color: rgba(255,215,0,0.5);  box-shadow: 0 0 20px rgba(255,215,0,0.2); }
+  .score-card .icon { font-size: 1.8rem; }
+  .score-card .label { font-size: 0.7rem; color: rgba(255,255,255,0.6); margin-top: 3px; }
+  .score-card .value { font-size: 1.5rem; font-weight: 800; margin-top: 4px; }
+  .score-card.glow-green .value { color: #00ff88; }
+  .score-card.glow-blue  .value { color: #00ccff; }
+  .score-card.glow-pink  .value { color: #ff6b9d; }
+  .score-card.glow-gold  .value { color: #ffd700; }
+
+  /* Tabs */
+  .tabs {
+    display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;
+  }
+  .tab-btn {
+    flex: 1; min-width: 120px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.6);
+    padding: 12px 16px; border-radius: 12px;
+    cursor: pointer; font-family: 'Prompt', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .tab-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+  .tab-btn.active {
+    background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,204,255,0.2));
+    border-color: rgba(0,255,136,0.6);
+    color: #00ff88;
+    box-shadow: 0 0 20px rgba(0,255,136,0.2);
+  }
+
+  /* Game Sections */
+  .game-section { display: none; animation: fadeIn 0.4s ease; }
+  .game-section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Section Title */
+  .section-title {
+    text-align: center; margin-bottom: 25px;
+  }
+  .section-title h2 { font-size: 1.4rem; font-weight: 700; }
+  .section-title p { color: rgba(255,255,255,0.65); font-size: 0.9rem; margin-top: 5px; }
+
+  /* Info Card (Rule Card) */
+  .rule-card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 18px; padding: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+    backdrop-filter: blur(8px);
+  }
+  .rule-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+
+  /* Plate Visual */
+  .plate-visual {
+    display: flex; justify-content: center; margin: 20px 0;
+  }
+  .plate-svg-container { width: 280px; height: 280px; position: relative; }
+
+  /* 2:1:1 Plate Game */
+  .plate-game-area {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px; padding: 25px; margin-bottom: 20px;
+  }
+
+  .food-bank {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: center; margin-bottom: 20px;
+  }
+  .food-item {
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 14px; padding: 10px 14px;
+    cursor: pointer; transition: all 0.3s ease;
+    text-align: center; min-width: 80px;
+    user-select: none;
+  }
+  .food-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    border-color: rgba(0,255,136,0.5);
+  }
+  .food-item.selected {
+    border-color: #00ff88;
+    background: rgba(0,255,136,0.15);
+    box-shadow: 0 0 15px rgba(0,255,136,0.3);
+  }
+  .food-item .emoji { font-size: 1.8rem; }
+  .food-item .name { font-size: 0.7rem; margin-top: 4px; color: rgba(255,255,255,0.8); }
+  .food-item .cat {
+    font-size: 0.6rem; margin-top: 2px;
+    padding: 2px 6px; border-radius: 20px;
+  }
+  .food-item .cat.veg { background: rgba(0,200,100,0.3); color: #00ff88; }
+  .food-item .cat.carb { background: rgba(255,180,0,0.3); color: #ffcc00; }
+  .food-item .cat.pro { background: rgba(255,100,100,0.3); color: #ff6b6b; }
+
+  /* Drop Zones */
+  .drop-zones {
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 20px;
+  }
+  .drop-zone {
+    border-radius: 16px; padding: 15px; min-height: 130px;
+    border: 2px dashed rgba(255,255,255,0.2);
+    transition: all 0.3s ease; text-align: center;
+  }
+  .drop-zone.veg-zone {
+    background: rgba(0,200,100,0.05);
+    border-color: rgba(0,200,100,0.3);
+  }
+  .drop-zone.carb-zone {
+    background: rgba(255,180,0,0.05);
+    border-color: rgba(255,180,0,0.3);
+  }
+  .drop-zone.pro-zone {
+    background: rgba(255,100,100,0.05);
+    border-color: rgba(255,100,100,0.3);
+  }
+  .drop-zone .zone-title {
+    font-size: 0.75rem; font-weight: 700; margin-bottom: 8px;
+  }
+  .drop-zone.veg-zone .zone-title  { color: #00ff88; }
+  .drop-zone.carb-zone .zone-title { color: #ffcc00; }
+  .drop-zone.pro-zone .zone-title  { color: #ff6b6b; }
+  .drop-zone .zone-ratio {
+    font-size: 1.8rem; font-weight: 800; opacity: 0.2;
+  }
+  .drop-zone.veg-zone .zone-ratio  { color: #00ff88; }
+  .drop-zone.carb-zone .zone-ratio { color: #ffcc00; }
+  .drop-zone.pro-zone .zone-ratio  { color: #ff6b6b; }
+  .drop-zone .placed-items {
+    display: flex; flex-wrap: wrap; gap: 5px;
+    justify-content: center; margin-top: 8px;
+  }
+  .placed-emoji { font-size: 1.5rem; cursor: pointer; transition: transform 0.2s; }
+  .placed-emoji:hover { transform: scale(1.2); }
+
+  /* SSS Quiz */
+  .quiz-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px; padding: 25px; margin-bottom: 20px;
+    backdrop-filter: blur(8px);
+  }
+  .quiz-question { font-size: 1.05rem; font-weight: 600; margin-bottom: 5px; }
+  .quiz-scenario { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 18px; font-style: italic; }
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .quiz-opt {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; padding: 14px 12px;
+    cursor: pointer; transition: all 0.3s ease;
+    font-family: 'Prompt', sans-serif; color: white;
+    font-size: 0.85rem; text-align: left;
+  }
+  .quiz-opt:hover:not(:disabled) {
+    background: rgba(0,204,255,0.1);
+    border-color: rgba(0,204,255,0.4);
+    transform: translateY(-2px);
+  }
+  .quiz-opt.correct { background: rgba(0,255,136,0.2); border-color: #00ff88; color: #00ff88; }
+  .quiz-opt.wrong   { background: rgba(255,80,80,0.2);  border-color: #ff5050; color: #ff5050; }
+  .quiz-opt:disabled { cursor: default; }
+  .feedback-box {
+    margin-top: 15px; padding: 15px; border-radius: 12px;
+    font-size: 0.9rem; display: none;
+  }
+  .feedback-box.show { display: block; animation: fadeIn 0.3s ease; }
+  .feedback-box.good { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); color: #00ff88; }
+  .feedback-box.bad  { background: rgba(255,80,80,0.1);  border: 1px solid rgba(255,80,80,0.3);  color: #ff8080; }
+
+  /* NCD Risk Meter */
+  .risk-meter {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px; padding: 25px;
+    margin-bottom: 20px;
+  }
+  .risk-title { font-size: 1rem; font-weight: 700; margin-bottom: 20px; text-align: center; }
+  .risk-sliders { display: grid; gap: 18px; }
+  .risk-row label {
+    display: flex; justify-content: space-between;
+    font-size: 0.85rem; margin-bottom: 8px;
+  }
+  .risk-row label span.val { font-weight: 700; }
+  .risk-slider {
+    -webkit-appearance: none; width: 100%; height: 8px;
+    border-radius: 10px; outline: none;
+    background: rgba(255,255,255,0.1);
+  }
+  .risk-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 22px; height: 22px;
+    border-radius: 50%; cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  }
+  .risk-slider.sweet::-webkit-slider-thumb { background: #ff6b9d; }
+  .risk-slider.fat::-webkit-slider-thumb   { background: #ffaa00; }
+  .risk-slider.salt::-webkit-slider-thumb  { background: #00ccff; }
+  .risk-slider.sweet { accent-color: #ff6b9d; }
+  .risk-slider.fat   { accent-color: #ffaa00; }
+  .risk-slider.salt  { accent-color: #00ccff; }
+
+  .risk-gauge {
+    margin-top: 20px; text-align: center;
+    background: rgba(255,255,255,0.04);
+    border-radius: 16px; padding: 20px;
+  }
+  .gauge-bar-bg {
+    width: 100%; height: 20px; background: rgba(255,255,255,0.08);
+    border-radius: 10px; overflow: hidden; margin: 10px 0;
+  }
+  .gauge-bar-fill {
+    height: 100%; border-radius: 10px;
+    transition: all 0.5s ease;
+    background: linear-gradient(90deg, #00ff88, #ffcc00, #ff5050);
+  }
+  .gauge-label { font-size: 1.3rem; font-weight: 800; }
+  .risk-tips { margin-top: 15px; text-align: left; }
+  .risk-tip-item {
+    padding: 8px 12px; border-radius: 10px; margin-bottom: 8px;
+    background: rgba(255,255,255,0.04); font-size: 0.82rem;
+    color: rgba(255,255,255,0.8);
+    border-left: 3px solid rgba(0,255,136,0.5);
+  }
+
+  /* Leaderboard */
+  .leaderboard {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,215,0,0.2);
+    border-radius: 18px; padding: 25px;
+    box-shadow: 0 0 30px rgba(255,215,0,0.05);
+  }
+  .lb-title { text-align: center; font-size: 1.1rem; font-weight: 700; color: #ffd700; margin-bottom: 20px; }
+  .lb-entry {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-radius: 12px; margin-bottom: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    transition: all 0.3s ease;
+  }
+  .lb-entry:hover { background: rgba(255,255,255,0.08); }
+  .lb-rank { font-size: 1.2rem; font-weight: 800; width: 30px; }
+  .lb-name { flex: 1; font-size: 0.9rem; }
+  .lb-score { font-size: 1rem; font-weight: 700; color: #00ff88; }
+  .lb-badge { font-size: 1.1rem; }
+
+  /* Buttons */
+  .btn-primary {
+    background: linear-gradient(135deg, #00ff88, #00ccaa);
+    color: #001a0a; border: none; border-radius: 12px;
+    padding: 14px 28px; font-family: 'Prompt', sans-serif;
+    font-size: 0.95rem; font-weight: 700; cursor: pointer;
+    transition: all 0.3s ease; width: 100%;
+    box-shadow: 0 4px 20px rgba(0,255,136,0.3);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,255,136,0.4);
+  }
+  .btn-secondary {
+    background: rgba(255,255,255,0.08);
+    color: white; border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px; padding: 12px 24px;
+    font-family: 'Prompt', sans-serif; font-size: 0.9rem;
+    font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.14); }
+
+  /* Progress */
+  .progress-bar-bg {
+    background: rgba(255,255,255,0.08); border-radius: 8px;
+    height: 8px; overflow: hidden; margin: 10px 0;
+  }
+  .progress-bar-fill {
+    height: 100%; border-radius: 8px;
+    background: linear-gradient(90deg, #00ff88, #00ccff);
+    transition: width 0.4s ease;
+  }
+
+  /* Notification Toast */
+  .toast {
+    position: fixed; top: 20px; right: 20px;
+    background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
+    border-radius: 14px; padding: 15px 20px;
+    border: 1px solid rgba(0,255,136,0.4);
+    color: white; font-size: 0.9rem; z-index: 9999;
+    transform: translateX(150%); transition: transform 0.4s ease;
+    max-width: 280px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+  .toast.show { transform: translateX(0); }
+  .toast .toast-icon { font-size: 1.4rem; }
+  .toast .toast-title { font-weight: 700; color: #00ff88; margin: 4px 0; }
+
+  /* Home Screen */
+  .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+  .home-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px; padding: 20px; text-align: center;
+    cursor: pointer; transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+  }
+  .home-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+  }
+  .home-card.green  { border-color: rgba(0,255,136,0.3); }
+  .home-card.blue   { border-color: rgba(0,204,255,0.3); }
+  .home-card.pink   { border-color: rgba(255,107,157,0.3); }
+  .home-card.gold   { border-color: rgba(255,215,0,0.3); }
+  .home-card:hover.green  { box-shadow: 0 12px 30px rgba(0,255,136,0.15); }
+  .home-card:hover.blue   { box-shadow: 0 12px 30px rgba(0,204,255,0.15); }
+  .home-card:hover.pink   { box-shadow: 0 12px 30px rgba(255,107,157,0.15); }
+  .home-card:hover.gold   { box-shadow: 0 12px 30px rgba(255,215,0,0.15); }
+  .home-card .hc-icon   { font-size: 2.5rem; margin-bottom: 10px; }
+  .home-card .hc-title  { font-size: 0.95rem; font-weight: 700; }
+  .home-card .hc-desc   { font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-top: 5px; }
+  .home-card .hc-pts    { font-size: 0.8rem; font-weight: 700; margin-top: 8px; padding: 4px 12px; border-radius: 20px; display: inline-block; }
+  .home-card.green .hc-pts  { background: rgba(0,255,136,0.15); color: #00ff88; }
+  .home-card.blue  .hc-pts  { background: rgba(0,204,255,0.15); color: #00ccff; }
+  .home-card.pink  .hc-pts  { background: rgba(255,107,157,0.15); color: #ff6b9d; }
+  .home-card.gold  .hc-pts  { background: rgba(255,215,0,0.15); color: #ffd700; }
+
+  /* Badge display */
+  .badges-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+  .badge-item {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; padding: 8px 14px;
+    font-size: 0.8rem; display: flex; align-items: center; gap: 6px;
+  }
+  .badge-item.earned { border-color: rgba(255,215,0,0.5); background: rgba(255,215,0,0.1); }
+  .badge-item .badge-icon { font-size: 1.1rem; }
+
+  /* Plate drag highlight */
+  .drop-zone.drag-over {
+    border-style: solid !important;
+    background: rgba(0,255,136,0.1) !important;
+    transform: scale(1.02);
+  }
+
+  /* Result Modal */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+    z-index: 1000; display: none; align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: linear-gradient(135deg, #0a0a2e, #1a1a4e);
+    border: 1px solid rgba(0,255,136,0.4);
+    border-radius: 24px; padding: 35px; text-align: center;
+    max-width: 380px; width: 90%;
+    box-shadow: 0 0 60px rgba(0,255,136,0.2);
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  .modal-icon  { font-size: 4rem; margin-bottom: 10px; }
+  .modal-title { font-size: 1.5rem; font-weight: 800; color: #00ff88; margin-bottom: 8px; }
+  .modal-pts   { font-size: 2.5rem; font-weight: 800; color: #ffd700; }
+  .modal-msg   { color: rgba(255,255,255,0.7); font-size: 0.9rem; margin: 10px 0 20px; }
+
+  @media (max-width: 580px) {
+    .drop-zones { grid-template-columns: 1fr; }
+    .quiz-options { grid-template-columns: 1fr; }
+    .home-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Particles -->
+<div class="bg-particles" id="particles"></div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast">
+  <div class="toast-icon" id="toast-icon">🎉</div>
+  <div class="toast-title" id="toast-title">ยอดเยี่ยม!</div>
+  <div id="toast-msg">คุณได้รับคะแนน</div>
+</div>
+
+<!-- Result Modal -->
+<div class="modal-overlay" id="resultModal">
+  <div class="modal-box">
+    <div class="modal-icon" id="modal-icon">🏆</div>
+    <div class="modal-title" id="modal-title">ยอดเยี่ยม!</div>
+    <div class="modal-pts" id="modal-pts">+50 คะแนน</div>
+    <div class="modal-msg" id="modal-msg">คุณจัดจานได้ถูกต้อง</div>
+    <button class="btn-primary" onclick="closeModal()">เล่นต่อ 🚀</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">🍽️</div>
+    <h1>WDPRB Healthy Plate Challenge</h1>
+    <p>🏭 Western Digital | ห่างไกล NCDs ด้วยโภชนาการที่ดี</p>
+    <div style="margin-top: 15px;">
+      <div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap; font-size:0.85rem;">
+        <span style="color:#00ff88">🥗 จัดจาน <strong>2:1:1</strong></span>
+        <span style="color:#ff6b9d">🍬 ลดหวาน <strong>&lt;6 ช้อนชา/วัน</strong></span>
+        <span style="color:#ffaa00">🧈 ลดมัน <strong>&lt;6 ช้อนชา/วัน</strong></span>
+        <span style="color:#00ccff">🧂 ลดเค็ม <strong>&lt;1 ช้อนชา/วัน</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORE BAR -->
+  <div class="score-bar">
+    <div class="score-card glow-green">
+      <div class="icon">⭐</div>
+      <div class="label">คะแนนรวม</div>
+      <div class="value" id="totalScore">0</div>
+    </div>
+    <div class="score-card glow-blue">
+      <div class="icon">🎯</div>
+      <div class="label">ด่านที่ผ่าน</div>
+      <div class="value" id="levelCount">0</div>
+    </div>
+    <div class="score-card glow-pink">
+      <div class="icon">🔥</div>
+      <div class="label">Streak</div>
+      <div class="value" id="streakCount">0</div>
+    </div>
+    <div class="score-card glow-gold">
+      <div class="icon">🏅</div>
+      <div class="label">ยศ</div>
+      <div class="value" id="rankLabel" style="font-size:0.9rem;">เริ่มต้น</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('home')"    >🏠 หน้าหลัก</button>
+    <button class="tab-btn" onclick="showTab('plate211')"       >🍽️ จัดจาน 2:1:1</button>
+    <button class="tab-btn" onclick="showTab('quiz661')"        >🧠 ควิซ 6:6:1</button>
+    <button class="tab-btn" onclick="showTab('risk')"           >📊 ความเสี่ยง NCDs</button>
+    <button class="tab-btn" onclick="showTab('leaderboard')"    >🏆 อันดับ</button>
+  </div>
+
+  <!-- ==================== HOME ==================== -->
+  <div class="game-section active" id="section-home">
+    <div class="section-title">
+      <h2>🌟 ยินดีต้อนรับพนักงาน WDPRB!</h2>
+      <p>เลือกกิจกรรมเพื่อเรียนรู้และสะสมคะแนน</p>
+    </div>
+
+    <div class="home-grid">
+      <div class="home-card green" onclick="showTab('plate211')">
+        <div class="hc-icon">🍽️</div>
+        <div class="hc-title">เกมจัดจาน 2:1:1</div>
+        <div class="hc-desc">ลากอาหารใส่จานให้ถูกสัดส่วน ผัก:ข้าว:โปรตีน</div>
+        <div class="hc-pts">+50 คะแนน/จาน</div>
+      </div>
+      <div class="home-card blue" onclick="showTab('quiz661')">
+        <div class="hc-icon">🧠</div>
+        <div class="hc-title">ควิซ ลด หวาน มัน เค็ม</div>
+        <div class="hc-desc">ทดสอบความรู้กฎ 6:6:1 และ NCDs</div>
+        <div class="hc-pts">+30 คะแนน/ข้อ</div>
+      </div>
+      <div class="home-card pink" onclick="showTab('risk')">
+        <div class="hc-icon">📊</div>
+        <div class="hc-title">วัดความเสี่ยง NCDs</div>
+        <div class="hc-desc">ตรวจสอบพฤติกรรมการกินของคุณ</div>
+        <div class="hc-pts">+20 คะแนน</div>
+      </div>
+      <div class="home-card gold" onclick="showTab('leaderboard')">
+        <div class="hc-icon">🏆</div>
+        <div class="hc-title">อันดับ Top Players</div>
+        <div class="hc-desc">ดูอันดับสุขภาพดีของแผนก WDPRB</div>
+        <div class="hc-pts">Hall of Fame</div>
+      </div>
+    </div>
+
+    <!-- Knowledge Pill -->
+    <div class="rule-card" style="border-color: rgba(0,255,136,0.2);">
+      <h3 style="color:#00ff88">📌 กฎทองโภชนาการ WDPRB</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:10px;">
+        <div style="background:rgba(0,200,100,0.08); border-radius:14px; padding:15px; border:1px solid rgba(0,200,100,0.2);">
+          <div style="font-size:1.5rem; text-align:center; margin-bottom:8px;">🍽️</div>
+          <div style="font-weight:700; color:#00ff88; text-align:center; margin-bottom:8px;">สูตรจาน 2:1:1</div>
+          <div style="font-size:0.8rem; color:rgba(255,255,255,0.75); line-height:1.7;">
+            🥦 <strong>ผัก 2 ส่วน</strong> — ครึ่งจาน<br>
+            🍚 <strong>ข้าว/แป้ง 1 ส่วน</strong> — ¼ จาน<br>
+            🍗 <strong>โปรตีน 1 ส่วน</strong> — ¼ จาน
+          </div>
+        </div>
+        <div style="background:rgba(255,100,100,0.08); border-radius:14px; padding:15px; border:1px solid rgba(255,100,100,0.2);">
+          <div style="font-size:1.5rem; text-align:center; margin-bottom:8px;">⚖️</div>
+          <div style="font-weight:700; color:#ff6b9d; text-align:center; margin-bottom:8px;">กฎ 6:6:1 ต่อวัน</div>
+          <div style="font-size:0.8rem; color:rgba(255,255,255,0.75); line-height:1.7;">
+            🍬 <strong>น้ำตาล ≤ 6</strong> ช้อนชา<br>
+            🧈 <strong>น้ำมัน ≤ 6</strong> ช้อนชา<br>
+            🧂 <strong>เกลือ ≤ 1</strong> ช้อนชา
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Badges -->
+    <div class="rule-card">
+      <h3>🏅 ตราสัญลักษณ์ของฉัน</h3>
+      <div class="badges-row" id="badgeDisplay">
+        <div class="badge-item" id="badge-newbie"><span class="badge-icon">🌱</span> มือใหม่</div>
+        <div class="badge-item" id="badge-plate"><span class="badge-icon">🍽️</span> Chef 2:1:1</div>
+        <div class="badge-item" id="badge-quiz"><span class="badge-icon">🧠</span> Quiz Master</div>
+        <div class="badge-item" id="badge-healthy"><span class="badge-icon">💪</span> NCD Fighter</div>
+        <div class="badge-item" id="badge-streak"><span class="badge-icon">🔥</span> On Fire</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PLATE 2:1:1 ==================== -->
+  <div class="game-section" id="section-plate211">
+    <div class="section-title">
+      <h2>🍽️ เกมจัดจาน 2:1:1</h2>
+      <p>คลิกอาหาร แล้วคลิกช่องที่ต้องการวาง | ผัก 2 ชนิด + ข้าว 1 + โปรตีน 1</p>
+    </div>
+
+    <div class="plate-game-area">
+      <!-- Round Info -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <span style="font-size:0.9rem; color:rgba(255,255,255,0.7);">🎯 รอบที่ <span id="plateRound" style="color:#00ff88; font-weight:700;">1</span> / 3</span>
+        <span style="font-size:0.9rem; color:rgba(255,255,255,0.7);">⏱️ <span id="plateTimer" style="color:#ffcc00; font-weight:700;">30</span> วินาที</span>
+        <span style="font-size:0.9rem; color:rgba(255,255,255,0.7);">✅ ผ่านแล้ว: <span id="platePassed" style="color:#ff6b9d; font-weight:700;">0</span></span>
+      </div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="timerBar" style="width:100%"></div></div>
+
+      <!-- Drop Zones -->
+      <div class="drop-zones" id="dropZones">
+        <div class="drop-zone veg-zone" id="zone-veg" onclick="dropToZone('veg')">
+          <div class="zone-title">🥦 ผัก & ผลไม้ — 2 ส่วน</div>
+          <div class="zone-ratio">½</div>
+          <div class="placed-items" id="placed-veg"></div>
+        </div>
+        <div class="drop-zone carb-zone" id="zone-carb" onclick="dropToZone('carb')">
+          <div class="zone-title">🍚 คาร์บ — 1 ส่วน</div>
+          <div class="zone-ratio">¼</div>
+          <div class="placed-items" id="placed-carb"></div>
+        </div>
+        <div class="drop-zone pro-zone" id="zone-pro" onclick="dropToZone('pro')">
+          <div class="zone-title">🍗 โปรตีน — 1 ส่วน</div>
+          <div class="zone-ratio">¼</div>
+          <div class="placed-items" id="placed-pro"></div>
+        </div>
+      </div>
+
+      <!-- Food Bank -->
+      <div style="margin-bottom:10px; font-size:0.85rem; color:rgba(255,255,255,0.6); text-align:center;">
+        👇 คลิกเลือกอาหาร แล้วคลิกช่องด้านบนเพื่อวาง
+      </div>
+      <div class="food-bank" id="foodBank"></div>
+
+      <div style="display:flex; gap:10px; margin-top:15px;">
+        <button class="btn-primary" onclick="checkPlate()" style="flex:2">✅ ตรวจจาน</button>
+        <button class="btn-secondary" onclick="clearPlate()" style="flex:1">🗑️ ล้าง</button>
+        <button class="btn-secondary" onclick="initPlateGame()" style="flex:1">🔄 รอบใหม่</button>
+      </div>
+    </div>
+
+    <!-- Plate Tips -->
+    <div class="rule-card">
+      <h3 style="color:#00ff88">💡 เคล็ดลับการจัดจาน</h3>
+      <div style="font-size:0.85rem; color:rgba(255,255,255,0.75); line-height:1.9; margin-top:8px;">
+        ✅ ผักควรหลากสี — แดง เหลือง เขียว ม่วง<br>
+        ✅ เลือกข้าวกล้องแทนข้าวขาว ลดน้ำตาลในเลือด<br>
+        ✅ โปรตีนลีน เช่น ปลา ไก่ไม่ติดหนัง ไข่ขาว<br>
+        ✅ หลีกเลี่ยงอาหารทอด — เพิ่มแคลอรีไม่จำเป็น<br>
+        ✅ เพิ่มถั่วและธัญพืชเพื่อไฟเบอร์และโปรตีน
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== QUIZ 6:6:1 ==================== -->
+  <div class="game-section" id="section-quiz661">
+    <div class="section-title">
+      <h2>🧠 ควิซ ลด หวาน มัน เค็ม 6:6:1</h2>
+      <p>ทดสอบความรู้ NCDs และพฤติกรรมการกินที่ดี</p>
+    </div>
+
+    <!-- Progress -->
+    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.85rem; color:rgba(255,255,255,0.7);">
+      <span>ข้อที่ <span id="quizCurrent" style="color:#00ccff; font-weight:700;">1</span> / <span id="quizTotal">10</span></span>
+      <span>คะแนนควิซ: <span id="quizScore" style="color:#00ff88; font-weight:700;">0</span></span>
+    </div>
+    <div class="progress-bar-bg" style="margin-bottom:20px;">
+      <div class="progress-bar-fill" id="quizProgress" style="width:10%; background: linear-gradient(90deg, #00ccff, #ff6b9d);"></div>
+    </div>
+
+    <div class="quiz-card" id="quizCard">
+      <div class="quiz-question" id="quizQ">กำลังโหลดคำถาม...</div>
+      <div class="quiz-scenario" id="quizScenario"></div>
+      <div class="quiz-options" id="quizOpts"></div>
+      <div class="feedback-box" id="quizFeedback"></div>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:15px;">
+      <button class="btn-primary" id="nextQuizBtn" onclick="nextQuestion()" style="display:none">ข้อถัดไป ➡️</button>
+      <button class="btn-secondary" onclick="restartQuiz()">🔄 เริ่มใหม่</button>
+    </div>
+  </div>
+
+  <!-- ==================== RISK METER ==================== -->
+  <div class="game-section" id="section-risk">
+    <div class="section-title">
+      <h2>📊 วัดความเสี่ยง NCDs ของฉัน</h2>
+      <p>ปรับแถบตามพฤติกรรมการกินจริงของคุณ</p>
+    </div>
+
+    <div class="risk-meter">
+      <div class="risk-title">⚙️ พฤติกรรมการกินของฉัน (เฉลี่ยต่อวัน)</div>
+      <div class="risk-sliders">
+        <div class="risk-row">
+          <label>
+            <span>🍬 น้ำตาล / น้ำหวาน <small>(ช้อนชา)</small></span>
+            <span class="val" id="sweetVal" style="color:#ff6b9d">6</span>
+          </label>
+          <input type="range" class="risk-slider sweet" id="sweetSlider" min="0" max="20" value="6" oninput="updateRisk()">
+          <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:rgba(255,255,255,0.4); margin-top:3px;">
+            <span>0 — ดีมาก</span><span>6 — ขีดจำกัด</span><span>20 — อันตราย</span>
+          </div>
+        </div>
+        <div class="risk-row">
+          <label>
+            <span>🧈 น้ำมัน / ไขมัน <small>(ช้อนชา)</small></span>
+            <span class="val" id="fatVal" style="color:#ffaa00">6</span>
+          </label>
+          <input type="range" class="risk-slider fat" id="fatSlider" min="0" max="20" value="6" oninput="updateRisk()">
+          <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:rgba(255,255,255,0.4); margin-top:3px;">
+            <span>0 — ดีมาก</span><span>6 — ขีดจำกัด</span><span>20 — อันตราย</span>
+          </div>
+        </div>
+        <div class="risk-row">
+          <label>
+            <span>🧂 เกลือ / โซเดียม <small>(ช้อนชา)</small></span>
+            <span class="val" id="saltVal" style="color:#00ccff">1</span>
+          </label>
+          <input type="range" class="risk-slider salt" id="saltSlider" min="0" max="5" value="1" oninput="updateRisk()">
+          <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:rgba(255,255,255,0.4); margin-top:3px;">
+            <span>0 — ดีมาก</span><span>1 — ขีดจำกัด</span><span>5 — อันตราย</span>
+          </div>
+        </div>
+      </div>
+      <div class="risk-gauge">
+        <div style="font-size:0.85rem; color:rgba(255,255,255,0.6); margin-bottom:5px;">ระดับความเสี่ยง NCDs</div>
+        <div class="gauge-bar-bg"><div class="gauge-bar-fill" id="gaugeFill" style="width:33%"></div></div>
+        <div class="gauge-label" id="gaugeLabel">🟡 ปานกลาง</div>
+        <div style="font-size:0.85rem; color:rgba(255,255,255,0.6); margin-top:5px;" id="gaugeDesc">ยังอยู่ในเกณฑ์ควบคุมได้ แต่ควรระวัง</div>
+      </div>
+      <div class="risk-tips" id="riskTips"></div>
+    </div>
+
+    <button class="btn-primary" onclick="saveRiskScore()">💾 บันทึกคะแนนความเสี่ยง (+20 คะแนน)</button>
+  </div>
+
+  <!-- ==================== LEADERBOARD ==================== -->
+  <div class="game-section" id="section-leaderboard">
+    <div class="section-title">
+      <h2>🏆 Hall of Fame — WDPRB Healthy Team</h2>
+      <p>อันดับสุขภาพดีประจำสัปดาห์</p>
+    </div>
+
+    <div class="leaderboard">
+      <div class="lb-title">🌟 Top Healthy Players — WDPRB Production</div>
+      <div id="lbList"></div>
+    </div>
+
+    <div style="margin-top:20px; padding:20px; background:rgba(255,255,255,0.05); border-radius:16px; border:1px solid rgba(255,255,255,0.08); text-align:center;">
+      <div style="font-size:2rem; margin-bottom:8px;">📢</div>
+      <div style="font-weight:700; margin-bottom:5px;">อันดับของฉัน</div>
+      <div style="font-size:2rem; font-weight:800; color:#00ff88;" id="myRankDisplay">#-</div>
+      <div style="font-size:0.85rem; color:rgba(255,255,255,0.6); margin-top:5px;">คะแนนรวม: <span id="myScoreDisplay" style="color:#ffd700; font-weight:700;">0</span> คะแนน</div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+const state = {
+  totalScore: 0,
+  levelCount: 0,
+  streak: 0,
+  quizScore: 0,
+  currentQ: 0,
+  answered: false,
+  riskSaved: false,
+  badges: { newbie: false, plate: false, quiz: false, healthy: false, streak: false },
+  platePassed: 0,
+  plateRound: 1,
+  plateTimer: 30,
+  plateInterval: null,
+  selectedFood: null,
+  placedItems: { veg: [], carb: [], pro: [] },
+};
+
+// ============================================================
+// FOOD DATA
+// ============================================================
+const allFoods = [
+  { id:'f1',  emoji:'🥦', name:'บร็อคโคลี่',   cat:'veg' },
+  { id:'f2',  emoji:'🥕', name:'แครอท',        cat:'veg' },
+  { id:'f3',  emoji:'🍅', name:'มะเขือเทศ',    cat:'veg' },
+  { id:'f4',  emoji:'🥬', name:'ผักคะน้า',     cat:'veg' },
+  { id:'f5',  emoji:'🫑', name:'พริกหวาน',     cat:'veg' },
+  { id:'f6',  emoji:'🥒', name:'แตงกวา',       cat:'veg' },
+  { id:'f7',  emoji:'🍠', name:'มันหวาน',      cat:'veg' },
+  { id:'f8',  emoji:'🍚', name:'ข้าวกล้อง',    cat:'carb' },
+  { id:'f9',  emoji:'🍞', name:'ขนมปังโฮล',    cat:'carb' },
+  { id:'f10', emoji:'🍝', name:'พาสต้าโฮล',    cat:'carb' },
+  { id:'f11', emoji:'🌽', name:'ข้าวโพด',      cat:'carb' },
+  { id:'f12', emoji:'🥔', name:'มันฝรั่ง',     cat:'carb' },
+  { id:'f13', emoji:'🍗', name:'ไก่อบ',        cat:'pro'  },
+  { id:'f14', emoji:'🐟', name:'ปลาทูนึ่ง',    cat:'pro'  },
+  { id:'f15', emoji:'🥚', name:'ไข่ต้ม',       cat:'pro'  },
+  { id:'f16', emoji:'🫘', name:'ถั่วแดง',      cat:'pro'  },
+  { id:'f17', emoji:'🦐', name:'กุ้งนึ่ง',     cat:'pro'  },
+  { id:'f18', emoji:'🥩', name:'เนื้อไม่ติดมัน', cat:'pro' },
+];
+
+// ============================================================
+// QUIZ DATA
+// ============================================================
+const quizData = [
+  {
+    q:'กฎ 6:6:1 หมายถึงอะไร?',
+    s:'สำหรับผู้ใหญ่สุขภาพดี ปริมาณสูงสุดต่อวัน',
+    opts:['น้ำตาล 6 ช้อนโต๊ะ น้ำมัน 6 ช้อนชา เกลือ 1 ช้อนชา','น้ำตาล 6 ช้อนชา น้ำมัน 6 ช้อนชา เกลือ 1 ช้อนชา','น้ำตาล 6 แก้ว น้ำมัน 6 ช้อน เกลือ 1 ช้อน','น้ำตาล 6 กรัม น้ำมัน 6 มล. เกลือ 1 กก.'],
+    ans:1,
+    explain:'กฎ 6:6:1 ของกรมอนามัย: น้ำตาล ≤6 ช้อนชา (24ก.) น้ำมัน ≤6 ช้อนชา (30ก.) เกลือ ≤1 ช้อนชา (5ก.) ต่อวัน'
+  },
+  {
+    q:'สูตรจาน 2:1:1 หมายถึงอะไร?',
+    s:'วิธีจัดสัดส่วนอาหารในจาน',
+    opts:['เนื้อ 2 ส่วน : ผัก 1 : ข้าว 1','ผัก 2 ส่วน : ข้าว 1 : โปรตีน 1','ข้าว 2 ส่วน : ผัก 1 : เนื้อ 1','ผลไม้ 2 ส่วน : ขนม 1 : น้ำ 1'],
+    ans:1,
+    explain:'สูตร 2:1:1 = ผัก 2 ส่วน (ครึ่งจาน) + ข้าว/แป้ง 1 ส่วน (¼ จาน) + โปรตีน 1 ส่วน (¼ จาน)'
+  },
+  {
+    q:'โรค NCDs ใดที่พบมากในพนักงานโรงงาน?',
+    s:'NCD = Non-Communicable Diseases',
+    opts:['ไข้หวัด และ COVID-19','เบาหวาน ความดันโลหิตสูง ไขมันในเลือดสูง','มาลาเรีย และ ไข้เลือดออก','อหิวาตกโรค และ บิด'],
+    ans:1,
+    explain:'NCDs หลักในพนักงาน ได้แก่ เบาหวาน ความดันโลหิตสูง โรคหัวใจ ไขมันในเลือดสูง มักเกิดจากพฤติกรรมการกินและไม่ออกกำลังกาย'
+  },
+  {
+    q:'เครื่องดื่มใดมีน้ำตาลเกินกว่ากฎ 6 ช้อนชา?',
+    s:'น้ำตาล 1 ช้อนชา = 4 กรัม | กฎ: ≤ 24 กรัมต่อวัน',
+    opts:['น้ำเปล่า 500 มล.','ชาเขียวพร้อมดื่ม 1 ขวด (น้ำตาล 36ก.)','นมจืด 1 กล่อง (น้ำตาล 10ก.)','น้ำมะนาวคั้นสด ไม่ใส่น้ำตาล'],
+    ans:1,
+    explain:'ชาเขียวพร้อมดื่ม 1 ขวด มักมีน้ำตาล 30-40 กรัม = 7.5-10 ช้อนชา เกินกว่า 6 ช้อนชาต่อวัน'
+  },
+  {
+    q:'อาหารใดมีโซเดียมสูงที่สุด?',
+    s:'เกลือ 1 ช้อนชา = โซเดียม ~2,000 มก.',
+    opts:['ผลไม้สด 1 ถ้วย','ข้าวผัด 1 จาน','ผักสดไม่ปรุงรส','ข้าวกล้องต้ม'],
+    ans:1,
+    explain:'ข้าวผัด 1 จาน มีโซเดียมประมาณ 1,200-2,000 มก. เทียบเท่ากับเกลือเกือบ 1 ช้อนชา ซึ่งเป็นปริมาณสูงสุดต่อวัน'
+  },
+  {
+    q:'ข้อใดเป็นไขมันที่ควรหลีกเลี่ยงมากที่สุด?',
+    s:'ไขมันชนิดต่างๆ มีผลต่อสุขภาพแตกต่างกัน',
+    opts:['ไขมัน Omega-3 จากปลาทะเล','ไขมันทรานส์จากมาร์การีนและอาหารทอด','น้ำมันมะกอก Extra Virgin','น้ำมันรำข้าว'],
+    ans:1,
+    explain:'ไขมันทรานส์ (Trans Fat) เป็นอันตรายที่สุด เพิ่ม LDL (ไขมันเลว) และลด HDL (ไขมันดี) เสี่ยงโรคหัวใจมากกว่าไขมันอิ่มตัว'
+  },
+  {
+    q:'โรคเบาหวานชนิดที่ 2 สัมพันธ์กับอะไรมากที่สุด?',
+    s:'พนักงาน WDPRB มีความเสี่ยงเบาหวานจากพฤติกรรมใด?',
+    opts:['การออกกำลังกายมากเกินไป','การกินหวานมากและนั่งนานโดยไม่ขยับ','การดื่มน้ำมากเกินไป','การนอนหลับมากเกินไป'],
+    ans:1,
+    explain:'เบาหวาน T2 เกิดจากภาวะดื้ออินซูลิน สาเหตุหลัก: บริโภคน้ำตาลมาก นั่งนานไม่ออกกำลัง น้ำหนักเกิน พบมากในพนักงานออฟฟิศและโรงงาน'
+  },
+  {
+    q:'กินผักสีอะไรหลายสีถึงจะดีต่อสุขภาพที่สุด?',
+    s:'หลักการ "กินสีรุ้ง" หรือ Eat the Rainbow',
+    opts:['กินแต่ผักสีเขียวอย่างเดียว','กินผักหลากสี แดง เหลือง ส้ม เขียว ม่วง','กินแต่ผักสีขาวและเหลือง','สีไม่สำคัญ กินชนิดเดียวพอ'],
+    ans:1,
+    explain:'ผักหลากสีให้สารอาหารและ Phytochemicals ต่างกัน: เขียว=โฟเลต เหลือง/ส้ม=เบต้าแคโรทีน แดง=ไลโคพีน ม่วง=แอนโทไซยานิน'
+  },
+  {
+    q:'ควรดื่มน้ำวันละเท่าไหร่สำหรับพนักงานโรงงาน?',
+    s:'พนักงาน WDPRB ทำงานในสภาพแวดล้อมที่มีความร้อน',
+    opts:['1 ลิตร (4 แก้ว)','2-3 ลิตร (8-12 แก้ว) หรือมากกว่าถ้าอากาศร้อน','0.5 ลิตร (2 แก้ว)','ดื่มแค่ตอนหิวน้ำก็พอ'],
+    ans:1,
+    explain:'พนักงานโรงงานควรดื่มน้ำ 2-3 ลิตร/วัน และเพิ่มขึ้นถ้าทำงานในที่ร้อนหรือออกแรงมาก น้ำช่วยระบายความร้อนและล้างของเสีย'
+  },
+  {
+    q:'อาหารว่างชนิดใดดีที่สุดสำหรับพนักงานตอนพักกลางวัน?',
+    s:'พักเบรคที่โรงงาน WDPRB อยากกินอะไรดี?',
+    opts:['ขนมกรุบกรอบซองใหญ่ + น้ำอัดลม','ผลไม้สดถ้วยเล็ก + น้ำเปล่า','เค้กช็อกโกแลต 2 ชิ้น + กาแฟน้ำตาล 3 ช้อน','มันฝรั่งทอด + ชานมไข่มุก'],
+    ans:1,
+    explain:'ผลไม้สด + น้ำเปล่า เป็นตัวเลือกที่ดีที่สุด: ให้วิตามิน ใยอาหาร น้ำตาลธรรมชาติ ไม่เพิ่มน้ำตาลเทียม ช่วยให้มีพลังงานอย่างต่อเนื่อง'
+  },
+];
+
+// ============================================================
+// LEADERBOARD DATA
+// ============================================================
+const leaderboardData = [
+  { name:'สมหมาย ใจดี',   dept:'แผนก A', score:520, badge:'🥇' },
+  { name:'นิดา สุขสม',    dept:'แผนก B', score:480, badge:'🥈' },
+  { name:'วิชัย มานะ',    dept:'แผนก C', score:445, badge:'🥉' },
+  { name:'สุนีย์ รักสุข',  dept:'แผนก D', score:390, badge:'🏅' },
+  { name:'ประยุทธ์ เก่งกล้า',dept:'แผนก E',score:360, badge:'🏅' },
+  { name:'มาลี สดใส',     dept:'แผนก A', score:310, badge:'⭐' },
+  { name:'ชาญ วิทยา',     dept:'แผนก B', score:280, badge:'⭐' },
+  { name:'คุณ (ฉัน)',      dept:'WDPRB',  score:0,   badge:'🌱', isMe:true },
+];
+
+// ============================================================
+// PARTICLES
+// ============================================================
+function createParticles() {
+  const container = document.getElementById('particles');
+  const colors = ['#00ff88','#00ccff','#ff6b9d','#ffd700','#aa88ff'];
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 8 + 3;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    p.style.cssText = `
+      left: ${Math.random()*100}%;
+      width: ${size}px; height: ${size}px;
+      background: ${color};
+      animation-duration: ${Math.random()*15+10}s;
+      animation-delay: ${Math.random()*10}s;
+    `;
+    container.appendChild(p);
+  }
+}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+function showTab(tab) {
+  document.querySelectorAll('.game-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + tab).classList.add('active');
+  event && event.target && event.target.classList.add('active');
+  // Fix tab button highlight
+  const btns = document.querySelectorAll('.tab-btn');
+  const tabIndex = ['home','plate211','quiz661','risk','leaderboard'].indexOf(tab);
+  if (tabIndex >= 0) btns[tabIndex].classList.add('active');
+
+  if (tab === 'leaderboard') renderLeaderboard();
+  if (tab === 'plate211' && !state.plateInterval) initPlateGame();
+  if (tab === 'quiz661' && state.currentQ === 0) loadQuestion(0);
+}
+
+function showToast(icon, title, msg, color='#00ff88') {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-msg').textContent = msg;
+  t.style.borderColor = color + '66';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function showModal(icon, title, pts, msg) {
+  document.getElementById('modal-icon').textContent = icon;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-pts').textContent = pts;
+  document.getElementById('modal-msg').textContent = msg;
+  document.getElementById('resultModal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('resultModal').classList.remove('show');
+}
+
+function addScore(pts) {
+  state.totalScore += pts;
+  document.getElementById('totalScore').textContent = state.totalScore;
+  updateRank();
+  updateMyLeaderboard();
+}
+
+function updateRank() {
+  const ranks = [
+    [0,   '🌱 เริ่มต้น'],
+    [100, '🥗 รักสุขภาพ'],
+    [250, '💪 Fit Fighter'],
+    [450, '🌟 NCD Hero'],
+    [700, '👑 Health Champion'],
+    [1000,'🏆 WDPRB Legend'],
+  ];
+  let rank = ranks[0][1];
+  for (const [min, label] of ranks) { if (state.totalScore >= min) rank = label; }
+  document.getElementById('rankLabel').textContent = rank;
+}
+
+function checkBadge(type) {
+  if (state.badges[type]) return;
+  state.badges[type] = true;
+  const el = document.getElementById('badge-' + type);
+  if (el) { el.classList.add('earned'); el.style.borderColor = 'rgba(255,215,0,0.5)'; }
+  const badgeNames = {
+    newbie:'🌱 ได้รับตรา "มือใหม่"!',
+    plate:'🍽️ ได้รับตรา "Chef 2:1:1"!',
+    quiz:'🧠 ได้รับตรา "Quiz Master"!',
+    healthy:'💪 ได้รับตรา "NCD Fighter"!',
+    streak:'🔥 ได้รับตรา "On Fire"!'
+  };
+  showToast('🏅', 'ได้รับตราใหม่!', badgeNames[type], '#ffd700');
+}
+
+// ============================================================
+// PLATE GAME
+// ============================================================
+function getRandomFoods() {
+  const vegs  = allFoods.filter(f => f.cat === 'veg').sort(() => Math.random()-0.5).slice(0,4);
+  const carbs = allFoods.filter(f => f.cat === 'carb').sort(() => Math.random()-0.5).slice(0,3);
+  const pros  = allFoods.filter(f => f.cat === 'pro').sort(() => Math.random()-0.5).slice(0,3);
+  return [...vegs, ...carbs, ...pros].sort(() => Math.random()-0.5);
+}
+
+function initPlateGame() {
+  clearInterval(state.plateInterval);
+  state.selectedFood = null;
+  state.placedItems = { veg: [], carb: [], pro: [] };
+  state.plateTimer = 30;
+  updatePlacedDisplay();
+
+  // Food Bank
+  const foods = getRandomFoods();
+  const fb = document.getElementById('foodBank');
+  fb.innerHTML = '';
+  foods.forEach(food => {
+    const el = document.createElement('div');
+    el.className = 'food-item';
+    el.id = 'fi-' + food.id;
+    el.innerHTML = `<div class="emoji">${food.emoji}</div><div class="name">${food.name}</div><div class="cat ${food.cat}">${food.cat==='veg'?'ผัก':food.cat==='carb'?'คาร์บ':'โปรตีน'}</div>`;
+    el.dataset.id = food.id;
+    el.dataset.cat = food.cat;
+    el.dataset.emoji = food.emoji;
+    el.addEventListener('click', () => selectFood(el, food));
+    fb.appendChild(el);
+  });
+
+  // Timer
+  document.getElementById('timerBar').style.width = '100%';
+  document.getElementById('plateTimer').textContent = '30';
+  state.plateInterval = setInterval(() => {
+    state.plateTimer--;
+    document.getElementById('plateTimer').textContent = state.plateTimer;
+    document.getElementById('timerBar').style.width = (state.plateTimer / 30 * 100) + '%';
+    if (state.plateTimer <= 0) {
+      clearInterval(state.plateInterval);
+      showToast('⏱️','หมดเวลา!','ลองใหม่อีกครั้ง','#ff5050');
+    }
+  }, 1000);
+
+  // Round display
+  document.getElementById('plateRound').textContent = state.plateRound;
+  document.getElementById('platePassed').textContent = state.platePassed;
+}
+
+function selectFood(el, food) {
+  if (el.dataset.placed === 'true') return;
+  document.querySelectorAll('.food-item').forEach(f => f.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selectedFood = food;
+}
+
+function dropToZone(zone) {
+  if (!state.selectedFood) { showToast('👆','เลือกอาหารก่อน!','คลิกอาหารในแถวด้านล่างก่อนแล้วค่อยวาง','#ffaa00'); return; }
+  const food = state.selectedFood;
+  state.placedItems[zone].push(food);
+  // Mark as placed
+  const el = document.getElementById('fi-' + food.id);
+  if (el) { el.dataset.placed = 'true'; el.style.opacity = '0.3'; el.classList.remove('selected'); }
+  state.selectedFood = null;
+  updatePlacedDisplay();
+}
+
+function updatePlacedDisplay() {
+  ['veg','carb','pro'].forEach(zone => {
+    const container = document.getElementById('placed-' + zone);
+    container.innerHTML = '';
+    state.placedItems[zone].forEach((food, idx) => {
+      const span = document.createElement('span');
+      span.className = 'placed-emoji';
+      span.textContent = food.emoji;
+      span.title = food.name + ' (คลิกเพื่อเอาออก)';
+      span.onclick = () => removeFromZone(zone, idx, food);
+      container.appendChild(span);
+    });
+  });
+}
+
+function removeFromZone(zone, idx, food) {
+  state.placedItems[zone].splice(idx, 1);
+  const el = document.getElementById('fi-' + food.id);
+  if (el) { el.dataset.placed = 'false'; el.style.opacity = '1'; }
+  updatePlacedDisplay();
+}
+
+function clearPlate() {
+  ['veg','carb','pro'].forEach(zone => {
+    state.placedItems[zone].forEach(food => {
+      const el = document.getElementById('fi-' + food.id);
+      if (el) { el.dataset.placed = 'false'; el.style.opacity = '1'; }
+    });
+    state.placedItems[zone] = [];
+  });
+  state.selectedFood = null;
+  document.querySelectorAll('.food-item').forEach(f => f.classList.remove('selected'));
+  updatePlacedDisplay();
+}
+
+function checkPlate() {
+  const veg  = state.placedItems.veg.length;
+  const carb = state.placedItems.carb.length;
+  const pro  = state.placedItems.pro.length;
+
+  if (veg + carb + pro === 0) { showToast('⚠️','ยังไม่ได้วางอาหาร!','วางอาหารในช่องก่อนนะ','#ffaa00'); return; }
+
+  const vegCorrect  = veg >= 2;
+  const carbCorrect = carb === 1;
+  const proCorrect  = pro === 1;
+  // Check category correctness
+  const vegWrong  = state.placedItems.veg.some(f => f.cat !== 'veg');
+  const carbWrong = state.placedItems.carb.some(f => f.cat !== 'carb');
+  const proWrong  = state.placedItems.pro.some(f => f.cat !== 'pro');
+
+  clearInterval(state.plateInterval);
+
+  if (vegCorrect && carbCorrect && proCorrect && !vegWrong && !carbWrong && !proWrong) {
+    state.streak++;
+    state.levelCount++;
+    state.platePassed++;
+    state.plateRound = Math.min(state.plateRound + 1, 3);
+    document.getElementById('levelCount').textContent = state.levelCount;
+    document.getElementById('streakCount').textContent = state.streak;
+    addScore(50);
+    checkBadge('newbie');
+    checkBadge('plate');
+    if (state.streak >= 3) checkBadge('streak');
+    showModal('🎉','จัดจานสำเร็จ!','+50 คะแนน','สัดส่วน 2:1:1 ถูกต้องสมบูรณ์!');
+    setTimeout(() => { closeModal(); initPlateGame(); }, 3000);
+  } else {
+    state.streak = 0;
+    document.getElementById('streakCount').textContent = '0';
+    let msg = '❌ ';
+    if (!vegCorrect || vegWrong)  msg += 'ผักต้องมีอย่างน้อย 2 ชนิด ';
+    if (!carbCorrect || carbWrong) msg += 'ข้าวต้องมีพอดี 1 ชนิด ';
+    if (!proCorrect || proWrong)   msg += 'โปรตีนต้องมีพอดี 1 ชนิด ';
+    showModal('😔','ลองใหม่นะ!','0 คะแนน', msg);
+    setTimeout(() => { closeModal(); initPlateGame(); }, 3500);
+  }
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+function loadQuestion(idx) {
+  if (idx >= quizData.length) { endQuiz(); return; }
+  state.answered = false;
+  const q = quizData[idx];
+  document.getElementById('quizQ').textContent = (idx+1) + '. ' + q.q;
+  document.getElementById('quizScenario').textContent = q.s;
+  document.getElementById('quizCurrent').textContent = idx + 1;
+  document.getElementById('quizProgress').style.width = ((idx+1)/quizData.length*100) + '%';
+
+  const optsEl = document.getElementById('quizOpts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = `${['A','B','C','D'][i]}. ${opt}`;
+    btn.onclick = () => answerQuiz(i, q, btn);
+    optsEl.appendChild(btn);
+  });
+
+  const fb = document.getElementById('quizFeedback');
+  fb.className = 'feedback-box';
+  fb.textContent = '';
+  document.getElementById('nextQuizBtn').style.display = 'none';
+}
+
+function answerQuiz(chosen, q, btn) {
+  if (state.answered) return;
+  state.answered = true;
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.ans) b.classList.add('correct');
+    else if (i === chosen) b.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('quizFeedback');
+  if (chosen === q.ans) {
+    state.quizScore += 30;
+    state.streak++;
+    addScore(30);
+    document.getElementById('quizScore').textContent = state.quizScore;
+    document.getElementById('streakCount').textContent = state.streak;
+    fb.className = 'feedback-box good show';
+    fb.innerHTML = '✅ <strong>ถูกต้อง! +30 คะแนน</strong><br>' + q.explain;
+    showToast('✅','ตอบถูก!','+30 คะแนน 🎯');
+  } else {
+    state.streak = 0;
+    document.getElementById('streakCount').textContent = '0';
+    fb.className = 'feedback-box bad show';
+    fb.innerHTML = '❌ <strong>คำตอบที่ถูกคือ: ' + q.opts[q.ans] + '</strong><br>' + q.explain;
+    showToast('❌','คำตอบไม่ถูก','ลองจำไว้นะ 📚','#ff5050');
+  }
+
+  document.getElementById('nextQuizBtn').style.display = 'block';
+  if (state.quizScore >= 150) checkBadge('quiz');
+  if (state.streak >= 3) checkBadge('streak');
+}
+
+function nextQuestion() {
+  state.currentQ++;
+  if (state.currentQ >= quizData.length) { endQuiz(); return; }
+  loadQuestion(state.currentQ);
+}
+
+function endQuiz() {
+  const pct = Math.round(state.quizScore / (quizData.length * 30) * 100);
+  document.getElementById('quizCard').innerHTML = `
+    <div style="text-align:center; padding:20px;">
+      <div style="font-size:4rem; margin-bottom:15px;">${pct >= 80 ? '🏆' : pct >= 60 ? '🌟' : '📚'}</div>
+      <div style="font-size:1.3rem; font-weight:700; color:#00ff88; margin-bottom:10px;">จบควิซแล้ว!</div>
+      <div style="font-size:2.5rem; font-weight:800; color:#ffd700;">${state.quizScore} คะแนน</div>
+      <div style="color:rgba(255,255,255,0.7); margin-top:10px;">คะแนน ${pct}% | ${pct>=80?'ยอดเยี่ยม!':pct>=60?'ผ่านได้ดี':'ลองศึกษาเพิ่มเติมนะ'}</div>
+    </div>`;
+  document.getElementById('nextQuizBtn').style.display = 'none';
+  checkBadge('healthy');
+}
+
+function restartQuiz() {
+  state.currentQ = 0;
+  state.quizScore = 0;
+  state.answered = false;
+  document.getElementById('quizScore').textContent = '0';
+  document.getElementById('quizCard').innerHTML = `
+    <div class="quiz-question" id="quizQ"></div>
+    <div class="quiz-scenario" id="quizScenario"></div>
+    <div class="quiz-options" id="quizOpts"></div>
+    <div class="feedback-box" id="quizFeedback"></div>`;
+  loadQuestion(0);
+}
+
+// ============================================================
+// RISK METER
+// ============================================================
+function updateRisk() {
+  const s = parseFloat(document.getElementById('sweetSlider').value);
+  const f = parseFloat(document.getElementById('fatSlider').value);
+  const sa = parseFloat(document.getElementById('saltSlider').value);
+  document.getElementById('sweetVal').textContent = s;
+  document.getElementById('fatVal').textContent = f;
+  document.getElementById('saltVal').textContent = sa;
+
+  // Score (0-100)
+  const sweetScore = Math.min(s / 20 * 100, 100);
+  const fatScore   = Math.min(f / 20 * 100, 100);
+  const saltScore  = Math.min(sa / 5 * 100, 100);
+  const riskScore  = (sweetScore * 0.35 + fatScore * 0.35 + saltScore * 0.3);
+
+  document.getElementById('gaugeFill').style.width = riskScore + '%';
+
+  let label, desc, color;
+  if (riskScore < 25) {
+    label='🟢 ต่ำมาก — สุดยอด!'; desc='พฤติกรรมการกินดีเยี่ยม! ห่างไกล NCDs'; color='#00ff88';
+  } else if (riskScore < 45) {
+    label='🟡 ต่ำ — ดีมาก'; desc='ยังอยู่ในเกณฑ์ดี แต่ควรคงพฤติกรรมนี้ไว้'; color='#88ff00';
+  } else if (riskScore < 60) {
+    label='🟠 ปานกลาง — ระวัง!'; desc='เริ่มเสี่ยง ควรลดปริมาณลงเล็กน้อย'; color='#ffcc00';
+  } else if (riskScore < 80) {
+    label='🔴 สูง — อันตราย!'; desc='มีความเสี่ยง NCDs สูง ควรปรับพฤติกรรมทันที'; color='#ff8800';
+  } else {
+    label='🚨 สูงมาก — เร่งด่วน!'; desc='ความเสี่ยงสูงมาก แนะนำพบแพทย์และนักโภชนาการ'; color='#ff3333';
+  }
+
+  document.getElementById('gaugeLabel').textContent = label;
+  document.getElementById('gaugeLabel').style.color = color;
+  document.getElementById('gaugeDesc').textContent = desc;
+
+  const tips = [];
+  if (s > 6)  tips.push('🍬 ลดน้ำตาล: หลีกเลี่ยงน้ำหวาน ชานม ขนมหวาน เลือกน้ำเปล่า ผลไม้สดแทน');
+  if (f > 6)  tips.push('🧈 ลดไขมัน: เลี่ยงของทอด เลือกนึ่ง ต้ม ย่าง อ่านฉลาก "Trans Fat" บนบรรจุภัณฑ์');
+  if (sa > 1) tips.push('🧂 ลดเกลือ: ชิมก่อนปรุง เลี่ยงซอส น้ำปลา เกลือ เลือกผลิตภัณฑ์โซเดียมต่ำ');
+  if (tips.length === 0) tips.push('✅ ดีมาก! รักษาพฤติกรรมการกินนี้ต่อไปเพื่อห่างไกล NCDs');
+
+  const tipEl = document.getElementById('riskTips');
+  tipEl.innerHTML = tips.map(t => `<div class="risk-tip-item">${t}</div>`).join('');
+}
+
+function saveRiskScore() {
+  if (state.riskSaved) { showToast('ℹ️','บันทึกแล้ว','คะแนนถูกบันทึกไปแล้ว','#00ccff'); return; }
+  state.riskSaved = true;
+  addScore(20);
+  checkBadge('healthy');
+  showModal('📊','บันทึกสำเร็จ!','+20 คะแนน','ขอบคุณที่ประเมินความเสี่ยงของคุณ');
+}
+
+// ============================================================
+// LEADERBOARD
+// ============================================================
+function updateMyLeaderboard() {
+  const myEntry = leaderboardData.find(e => e.isMe);
+  if (myEntry) myEntry.score = state.totalScore;
+  leaderboardData.sort((a, b) => b.score - a.score);
+}
+
+function renderLeaderboard() {
+  updateMyLeaderboard();
+  const list = document.getElementById('lbList');
+  list.innerHTML = '';
+  leaderboardData.forEach((entry, i) => {
+    const div = document.createElement('div');
+    div.className = 'lb-entry';
+    if (entry.isMe) div.style.cssText = 'border-color:rgba(0,255,136,0.4); background:rgba(0,255,136,0.05);';
+    const rankEmoji = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+    div.innerHTML = `
+      <div class="lb-rank">${rankEmoji || ('#'+(i+1))}</div>
+      <div class="lb-name">${entry.name} ${entry.isMe?'<span style="color:#00ff88; font-size:0.75rem;">(คุณ)</span>':''}<br><span style="font-size:0.75rem; color:rgba(255,255,255,0.5);">${entry.dept}</span></div>
+      <div class="lb-score">${entry.score.toLocaleString()}</div>
+      <div class="lb-badge">${entry.badge}</div>`;
+    list.appendChild(div);
+  });
+  const myRank = leaderboardData.findIndex(e => e.isMe) + 1;
+  document.getElementById('myRankDisplay').textContent = '#' + myRank;
+  document.getElementById('myScoreDisplay').textContent = state.totalScore.toLocaleString();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+createParticles();
+updateRisk();
+checkBadge('newbie');
+loadQuestion(0);
+initPlateGame();
+renderLeaderboard();
+</script>
+</body>
+</html>
