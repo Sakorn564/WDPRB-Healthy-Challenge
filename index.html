@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>WDPRB Healthy Challenge  🍽️</title>
+<title>WDPRB Healthy Challenge 🍽️</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700;800&display=swap');
 
@@ -24,7 +24,6 @@ html, body {
   overflow-x:hidden;
 }
 
-/* ─── PARTICLES ─── */
 #particles { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
 .pt { position:absolute; border-radius:50%; opacity:.12; animation:floatUp linear infinite; }
 @keyframes floatUp {
@@ -35,7 +34,11 @@ html, body {
 }
 
 /* ─── LAYOUT ─── */
-.wrap { position:relative; z-index:1; max-width:520px; margin:0 auto; padding:12px 12px 80px; }
+.wrap {
+  position:relative; z-index:1;
+  max-width:600px; margin:0 auto;
+  padding:12px 12px 100px;
+}
 
 /* ─── HEADER ─── */
 .hdr {
@@ -65,6 +68,27 @@ html, body {
 .rp-orange{ background:rgba(255,170,0,.12); border-color:rgba(255,170,0,.35); color:var(--orange); }
 .rp-blue  { background:rgba(0,204,255,.12); border-color:rgba(0,204,255,.35); color:var(--blue); }
 
+/* ─── QUICK NAV in HEADER ─── */
+.quick-nav {
+  display:flex; gap:6px; justify-content:center; flex-wrap:wrap;
+  margin-top:12px; padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.qn-btn {
+  background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14);
+  color:rgba(255,255,255,.75); border-radius:12px;
+  padding:7px 14px; cursor:pointer;
+  font-family:'Prompt',sans-serif; font-size:.75rem; font-weight:600;
+  transition:all .2s; white-space:nowrap;
+}
+.qn-btn:active { transform:scale(.94); }
+.qn-btn.qn-g  { border-color:rgba(0,255,136,.35);   color:var(--green); }
+.qn-btn.qn-b  { border-color:rgba(0,204,255,.35);   color:var(--blue);  }
+.qn-btn.qn-pk { border-color:rgba(255,107,157,.35); color:var(--pink);  }
+.qn-btn.qn-o  { border-color:rgba(255,170,0,.35);   color:var(--orange);}
+.qn-btn.qn-gd { border-color:rgba(255,215,0,.35);   color:var(--gold);  }
+.qn-btn.active-nav { background:rgba(0,255,136,.15); border-color:rgba(0,255,136,.6); color:var(--green); font-weight:800; }
+
 /* ─── SCORE BAR ─── */
 .score-bar { display:flex; gap:8px; margin-bottom:12px; }
 .sc {
@@ -79,27 +103,6 @@ html, body {
 .sc.b { border-color:rgba(0,204,255,.35);  } .sc.b .sv { color:var(--blue);  }
 .sc.p { border-color:rgba(255,107,157,.35);} .sc.p .sv { color:var(--pink);  }
 .sc.o { border-color:rgba(255,215,0,.35);  } .sc.o .sv { color:var(--gold); font-size:.78rem; }
-
-/* ─── TABS ─── */
-.tab-bar {
-  display:flex; gap:6px; margin-bottom:14px;
-  overflow-x:auto; padding-bottom:2px;
-  scrollbar-width:none;
-}
-.tab-bar::-webkit-scrollbar { display:none; }
-.tb {
-  flex:0 0 auto; padding:9px 14px;
-  background:var(--card); border:1px solid var(--border);
-  color:rgba(255,255,255,.6); border-radius:12px;
-  cursor:pointer; font-family:'Prompt',sans-serif;
-  font-size:.78rem; font-weight:600; white-space:nowrap;
-  transition:all .25s;
-}
-.tb:active { transform:scale(.95); }
-.tb.on {
-  background:rgba(0,255,136,.15); border-color:rgba(0,255,136,.55);
-  color:var(--green); box-shadow:0 0 14px rgba(0,255,136,.15);
-}
 
 /* ─── SECTION ─── */
 .sec { display:none; animation:fadeUp .35s ease; }
@@ -125,9 +128,9 @@ html, body {
 .plate-meta {
   display:flex; justify-content:space-between; align-items:center;
   font-size:.78rem; color:rgba(255,255,255,.65);
-  margin-bottom:8px; flex-wrap:wrap; gap:4px;
+  margin-bottom:8px; flex-wrap:wrap; gap:6px;
 }
-.plate-meta span strong { font-weight:700; }
+.plate-meta strong { font-weight:700; }
 .plate-meta .rnd  strong { color:var(--green); }
 .plate-meta .tmr  strong { color:var(--gold);  }
 .plate-meta .done strong { color:var(--pink);  }
@@ -135,143 +138,131 @@ html, body {
 .prog-bg  { background:rgba(255,255,255,.08); border-radius:8px; height:7px; overflow:hidden; margin-bottom:14px; }
 .prog-fill{ height:100%; border-radius:8px; background:linear-gradient(90deg,var(--green),var(--blue)); transition:width .4s; }
 
-/* DROP ZONES — vertical stack on mobile */
-.zones { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+/* Selected indicator */
+.sel-ind {
+  display:none; align-items:center; gap:10px;
+  background:rgba(0,255,136,.08); border:1px solid rgba(0,255,136,.35);
+  border-radius:14px; padding:10px 14px; margin-bottom:12px;
+}
+.sel-ind.show { display:flex; animation:fadeUp .2s ease; }
+.sel-ind .se { font-size:1.8rem; }
+.sel-ind .sn { font-size:.85rem; font-weight:700; color:var(--green); }
+.sel-ind .sh { font-size:.72rem; color:rgba(255,255,255,.55); margin-top:2px; }
+.sel-ind .sc-btn {
+  margin-left:auto;
+  background:rgba(255,80,80,.15); border:1px solid rgba(255,80,80,.3);
+  color:var(--red); border-radius:10px; padding:7px 12px;
+  font-size:.78rem; cursor:pointer; font-family:'Prompt',sans-serif;
+  font-weight:600; white-space:nowrap;
+}
 
+/* Drop Zones */
+.zones { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
 .zone {
   border-radius:16px; padding:12px 14px;
   border:2px dashed rgba(255,255,255,.18);
-  transition:all .3s; min-height:80px;
-  cursor:pointer; position:relative;
-  user-select:none;
+  transition:all .25s; min-height:82px;
+  cursor:pointer; user-select:none;
 }
-.zone.vz { background:rgba(0,200,100,.05); border-color:rgba(0,200,100,.3); }
-.zone.cz { background:rgba(255,180,0,.05);  border-color:rgba(255,180,0,.3);  }
-.zone.pz { background:rgba(255,100,100,.05);border-color:rgba(255,100,100,.3); }
+.zone.vz  { background:rgba(0,200,100,.05);  border-color:rgba(0,200,100,.3);  }
+.zone.cz  { background:rgba(255,180,0,.05);  border-color:rgba(255,180,0,.3);  }
+.zone.pz  { background:rgba(255,100,100,.05);border-color:rgba(255,100,100,.3);}
 
-/* pulse when item selected */
-.zone.pulse-vz { animation:pulseGreen .6s infinite alternate; }
-.zone.pulse-cz { animation:pulseYellow .6s infinite alternate; }
-.zone.pulse-pz { animation:pulseRed .6s infinite alternate; }
-@keyframes pulseGreen  { to { border-color:var(--green);  box-shadow:0 0 16px rgba(0,255,136,.3); }}
-@keyframes pulseYellow { to { border-color:var(--gold);   box-shadow:0 0 16px rgba(255,215,0,.3); }}
-@keyframes pulseRed    { to { border-color:var(--pink);   box-shadow:0 0 16px rgba(255,107,157,.3); }}
+.zone.pulse-v { animation:pV .55s infinite alternate; }
+.zone.pulse-c { animation:pC .55s infinite alternate; }
+.zone.pulse-p { animation:pP .55s infinite alternate; }
+@keyframes pV { to { border-color:var(--green); box-shadow:0 0 18px rgba(0,255,136,.3); }}
+@keyframes pC { to { border-color:var(--gold);  box-shadow:0 0 18px rgba(255,215,0,.3);  }}
+@keyframes pP { to { border-color:var(--pink);  box-shadow:0 0 18px rgba(255,107,157,.3); }}
 
-.zone.hit {
-  border-style:solid !important;
-  transform:scale(1.02);
-}
+.zone.hit { border-style:solid !important; transform:scale(1.02); }
 .zone.hit.vz { border-color:var(--green); background:rgba(0,255,136,.12); }
 .zone.hit.cz { border-color:var(--gold);  background:rgba(255,215,0,.10); }
 .zone.hit.pz { border-color:var(--pink);  background:rgba(255,107,157,.12); }
 
-.zone-hdr {
-  display:flex; align-items:center; gap:8px; margin-bottom:8px;
-}
-.zone-hdr .zt { font-size:.8rem; font-weight:700; }
+.zone-hdr { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.zt { font-size:.8rem; font-weight:700; }
 .vz .zt { color:var(--green); }
 .cz .zt { color:var(--gold);  }
 .pz .zt { color:var(--pink);  }
-.zone-hdr .zr {
-  margin-left:auto; font-size:.7rem; font-weight:700;
+.zr {
+  margin-left:auto; font-size:.68rem; font-weight:700;
   padding:2px 8px; border-radius:10px;
 }
-.vz .zr { background:rgba(0,255,136,.15); color:var(--green); }
-.cz .zr { background:rgba(255,215,0,.15);  color:var(--gold);  }
-.pz .zr { background:rgba(255,107,157,.15);color:var(--pink);  }
+.vz .zr { background:rgba(0,255,136,.15);   color:var(--green); }
+.cz .zr { background:rgba(255,215,0,.15);   color:var(--gold);  }
+.pz .zr { background:rgba(255,107,157,.15); color:var(--pink);  }
 
 .placed-row {
-  display:flex; flex-wrap:wrap; gap:6px; min-height:36px;
-  align-items:center;
+  display:flex; flex-wrap:wrap; gap:6px;
+  min-height:32px; align-items:center;
 }
-.placed-chip {
-  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15);
+.p-chip {
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18);
   border-radius:10px; padding:4px 10px;
   display:flex; align-items:center; gap:5px;
-  font-size:.78rem; cursor:pointer; transition:all .2s;
+  font-size:.78rem; cursor:pointer; transition:transform .15s;
   animation:chipIn .2s ease;
 }
 @keyframes chipIn { from{transform:scale(0)} to{transform:scale(1)} }
-.placed-chip:active { transform:scale(.9); }
-.placed-chip .ce { font-size:1.1rem; }
-.placed-chip .cn { color:rgba(255,255,255,.8); }
-.placed-chip .cx { color:var(--red); font-size:.85rem; margin-left:2px; }
+.p-chip:active { transform:scale(.88); }
+.p-chip .ce { font-size:1.1rem; }
+.p-chip .cn { color:rgba(255,255,255,.85); }
+.p-chip .cx { color:var(--red); font-size:.85rem; margin-left:2px; }
 
 .zone-hint {
-  font-size:.72rem; color:rgba(255,255,255,.3);
+  font-size:.72rem; color:rgba(255,255,255,.28);
   text-align:center; margin-top:4px;
 }
 
-/* ─── SELECTED INDICATOR ─── */
-.sel-indicator {
-  display:none; align-items:center; gap:10px;
-  background:rgba(0,255,136,.1); border:1px solid rgba(0,255,136,.35);
-  border-radius:14px; padding:10px 14px; margin-bottom:12px;
-  animation:fadeUp .2s ease;
-}
-.sel-indicator.show { display:flex; }
-.sel-indicator .sel-emoji { font-size:1.8rem; }
-.sel-indicator .sel-info { flex:1; }
-.sel-indicator .sel-name  { font-size:.85rem; font-weight:700; color:var(--green); }
-.sel-indicator .sel-hint  { font-size:.72rem; color:rgba(255,255,255,.6); }
-.sel-indicator .sel-cancel{
-  background:rgba(255,80,80,.15); border:1px solid rgba(255,80,80,.3);
-  color:var(--red); border-radius:10px; padding:6px 10px;
-  font-size:.78rem; cursor:pointer; font-family:'Prompt',sans-serif;
-}
-
-/* ─── FOOD BANK ─── */
-.food-bank-wrap { margin-bottom:14px; }
-.food-bank-label {
+/* Food Bank */
+.fb-label {
   font-size:.78rem; color:rgba(255,255,255,.5);
   text-align:center; margin-bottom:8px;
 }
 .food-bank {
   display:grid; grid-template-columns:repeat(4,1fr); gap:8px;
+  margin-bottom:14px;
 }
 .fi {
   background:rgba(255,255,255,.07); border:2px solid var(--border);
   border-radius:14px; padding:8px 4px; text-align:center;
-  cursor:pointer; transition:all .2s;
-  user-select:none; position:relative;
-  -webkit-tap-highlight-color:transparent;
+  cursor:pointer; transition:all .2s; user-select:none;
 }
-.fi:active { transform:scale(.92); }
+.fi:active { transform:scale(.9); }
 .fi.on {
   border-color:var(--green); background:rgba(0,255,136,.15);
-  box-shadow:0 0 16px rgba(0,255,136,.3);
-  transform:scale(1.06);
+  box-shadow:0 0 16px rgba(0,255,136,.3); transform:scale(1.06);
 }
-.fi.used { opacity:.3; pointer-events:none; }
+.fi.used { opacity:.28; pointer-events:none; }
 .fi .fe { font-size:1.6rem; }
-.fi .fn { font-size:.62rem; color:rgba(255,255,255,.8); margin-top:3px; line-height:1.2; }
+.fi .fn { font-size:.62rem; color:rgba(255,255,255,.82); margin-top:3px; line-height:1.2; }
 .fi .fc {
   font-size:.58rem; margin-top:3px; padding:2px 5px;
   border-radius:8px; display:inline-block;
 }
-.fi .fc.veg  { background:rgba(0,200,100,.2); color:var(--green); }
-.fi .fc.carb { background:rgba(255,180,0,.2);  color:var(--gold);  }
-.fi .fc.pro  { background:rgba(255,100,100,.2);color:#ff8080; }
+.fi .fc.veg  { background:rgba(0,200,100,.22); color:var(--green); }
+.fi .fc.carb { background:rgba(255,180,0,.22);  color:var(--gold);  }
+.fi .fc.pro  { background:rgba(255,100,100,.22);color:#ff8080; }
 
-/* ─── ACTION BUTTONS ─── */
+/* Action Buttons */
 .action-row { display:flex; gap:8px; }
 .btn-main {
   flex:2; background:linear-gradient(135deg,var(--green),#00ccaa);
   color:#001a0a; border:none; border-radius:14px;
   padding:14px; font-family:'Prompt',sans-serif;
   font-size:.95rem; font-weight:800; cursor:pointer;
-  box-shadow:0 4px 18px rgba(0,255,136,.3);
-  transition:all .2s;
+  box-shadow:0 4px 18px rgba(0,255,136,.3); transition:all .2s;
 }
 .btn-main:active { transform:scale(.96); box-shadow:none; }
 .btn-sec {
   flex:1; background:rgba(255,255,255,.07);
-  color:rgba(255,255,255,.8); border:1px solid var(--border);
+  color:rgba(255,255,255,.82); border:1px solid var(--border);
   border-radius:14px; padding:14px 8px;
   font-family:'Prompt',sans-serif; font-size:.82rem;
   font-weight:600; cursor:pointer; transition:all .2s;
 }
-.btn-sec:active { transform:scale(.95); background:rgba(255,255,255,.12); }
+.btn-sec:active { transform:scale(.95); background:rgba(255,255,255,.13); }
 
 /* ════════════════════════════════
    QUIZ
@@ -280,14 +271,14 @@ html, body {
   display:flex; justify-content:space-between;
   font-size:.78rem; color:rgba(255,255,255,.6); margin-bottom:6px;
 }
-.q-meta span strong { font-weight:700; }
+.q-meta strong { font-weight:700; }
 .q-no  strong { color:var(--blue);  }
 .q-pts strong { color:var(--green); }
 
 .qcard { padding:18px; margin-bottom:12px; }
-.q-text { font-size:.95rem; font-weight:700; margin-bottom:4px; line-height:1.5; }
-.q-scene { font-size:.78rem; color:rgba(255,255,255,.55); margin-bottom:16px; font-style:italic; }
-.q-opts { display:flex; flex-direction:column; gap:8px; }
+.q-text  { font-size:.95rem; font-weight:700; margin-bottom:4px; line-height:1.5; }
+.q-scene { font-size:.78rem; color:rgba(255,255,255,.52); margin-bottom:16px; font-style:italic; }
+.q-opts  { display:flex; flex-direction:column; gap:8px; }
 .q-opt {
   background:rgba(255,255,255,.06); border:1px solid var(--border);
   color:#fff; border-radius:12px; padding:13px 14px;
@@ -301,13 +292,13 @@ html, body {
 .q-opt.no  { background:rgba(255,80,80,.18);  border-color:var(--red);   color:#ff8080; }
 .q-opt:disabled { cursor:default; }
 
-.fb {
+.fb-box {
   border-radius:12px; padding:12px 14px; font-size:.82rem;
   line-height:1.6; display:none;
 }
-.fb.show { display:block; animation:fadeUp .25s; }
-.fb.ok { background:rgba(0,255,136,.1); border:1px solid rgba(0,255,136,.3); color:#a0ffcc; }
-.fb.no { background:rgba(255,80,80,.1);  border:1px solid rgba(255,80,80,.3);  color:#ffb0b0; }
+.fb-box.show { display:block; animation:fadeUp .25s; }
+.fb-box.ok { background:rgba(0,255,136,.1); border:1px solid rgba(0,255,136,.3); color:#a0ffcc; }
+.fb-box.no { background:rgba(255,80,80,.1);  border:1px solid rgba(255,80,80,.3);  color:#ffb0b0; }
 
 /* ════════════════════════════════
    RISK METER
@@ -317,7 +308,7 @@ html, body {
   display:flex; justify-content:space-between;
   font-size:.82rem; margin-bottom:6px;
 }
-.risk-row label .rv { font-weight:800; font-size:.95rem; }
+.rv { font-weight:800; font-size:.95rem; }
 .risk-slider {
   -webkit-appearance:none; width:100%; height:10px;
   border-radius:10px; outline:none;
@@ -371,8 +362,8 @@ html, body {
   background:rgba(255,255,255,.05); border:1px solid rgba(0,255,136,.2);
   border-radius:16px; padding:18px; text-align:center; margin-top:14px;
 }
-.my-rank-no { font-size:2.5rem; font-weight:800; color:var(--green); }
-.my-score-txt { font-size:.85rem; color:rgba(255,255,255,.6); margin-top:4px; }
+.my-rank-no  { font-size:2.5rem; font-weight:800; color:var(--green); }
+.my-score-txt{ font-size:.85rem; color:rgba(255,255,255,.6); margin-top:4px; }
 .my-score-txt span { color:var(--gold); font-weight:800; }
 
 /* ════════════════════════════════
@@ -384,15 +375,15 @@ html, body {
   border-radius:18px; padding:16px 12px; text-align:center;
   cursor:pointer; transition:all .25s;
 }
-.hc:active { transform:scale(.95); }
+.hc:active { transform:scale(.94); }
 .hc .hi { font-size:2rem; margin-bottom:8px; }
 .hc .ht { font-size:.85rem; font-weight:700; }
 .hc .hd { font-size:.7rem; color:rgba(255,255,255,.55); margin-top:4px; line-height:1.4; }
 .hc .hp { font-size:.72rem; font-weight:700; margin-top:8px; padding:3px 10px; border-radius:12px; display:inline-block; }
-.hc.g  { border-color:rgba(0,255,136,.25); } .hc.g .hp  { background:rgba(0,255,136,.15); color:var(--green); }
-.hc.b  { border-color:rgba(0,204,255,.25); } .hc.b .hp  { background:rgba(0,204,255,.15); color:var(--blue);  }
-.hc.pk { border-color:rgba(255,107,157,.25);} .hc.pk .hp { background:rgba(255,107,157,.15);color:var(--pink); }
-.hc.gd { border-color:rgba(255,215,0,.25); } .hc.gd .hp { background:rgba(255,215,0,.15); color:var(--gold);  }
+.hc.g  { border-color:rgba(0,255,136,.25);   } .hc.g  .hp { background:rgba(0,255,136,.15);   color:var(--green); }
+.hc.b  { border-color:rgba(0,204,255,.25);   } .hc.b  .hp { background:rgba(0,204,255,.15);   color:var(--blue);  }
+.hc.pk { border-color:rgba(255,107,157,.25); } .hc.pk .hp { background:rgba(255,107,157,.15); color:var(--pink);  }
+.hc.gd { border-color:rgba(255,215,0,.25);   } .hc.gd .hp { background:rgba(255,215,0,.15);   color:var(--gold);  }
 
 .badge-row { display:flex; flex-wrap:wrap; gap:8px; }
 .bdg {
@@ -405,7 +396,8 @@ html, body {
 
 /* ─── TOAST ─── */
 .toast {
-  position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px);
+  position:fixed; bottom:90px; left:50%;
+  transform:translateX(-50%) translateY(20px);
   background:rgba(5,5,25,.95); backdrop-filter:blur(12px);
   border:1px solid rgba(0,255,136,.35); border-radius:16px;
   padding:12px 20px; z-index:9999; text-align:center;
@@ -438,25 +430,38 @@ html, body {
 .m-pts   { font-size:2.2rem; font-weight:800; color:var(--gold); margin:6px 0; }
 .m-msg   { font-size:.82rem; color:rgba(255,255,255,.7); margin-bottom:18px; line-height:1.6; }
 
-/* ─── BOTTOM NAV (fixed) ─── */
+/* ════════════════════════════════
+   BOTTOM NAV — Fixed, centered
+════════════════════════════════ */
 .bot-nav {
-  position:fixed; bottom:0; left:0; right:0; z-index:500;
-  background:rgba(5,5,25,.95); backdrop-filter:blur(14px);
-  border-top:1px solid rgba(255,255,255,.1);
-  display:flex; padding:6px 4px 10px;
-  max-width:520px; margin:0 auto;
+  position:fixed; bottom:0;
+  left:50%; transform:translateX(-50%);
+  width:100%; max-width:600px;
+  z-index:500;
+  background:rgba(5,5,25,.97);
+  backdrop-filter:blur(16px);
+  border-top:1px solid rgba(255,255,255,.12);
+  border-radius:20px 20px 0 0;
+  display:flex;
+  padding:8px 6px 14px;
+  box-shadow:0 -4px 24px rgba(0,0,0,.5);
 }
 .bn {
   flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
   padding:6px 4px; border-radius:12px; cursor:pointer; transition:all .2s;
-  background:none; border:none; color:rgba(255,255,255,.45);
+  background:none; border:none; color:rgba(255,255,255,.4);
   font-family:'Prompt',sans-serif;
 }
-.bn:active { transform:scale(.9); }
+.bn:active { transform:scale(.88); }
 .bn.on { color:var(--green); }
-.bn .bi { font-size:1.3rem; }
+.bn.on .bi-wrap {
+  background:rgba(0,255,136,.12);
+  border-radius:12px; padding:4px 12px;
+}
+.bn .bi { font-size:1.25rem; display:block; }
 .bn .bl { font-size:.6rem; font-weight:600; }
 
+/* ─── RESPONSIVE ─── */
 @media(min-width:480px) {
   .food-bank { grid-template-columns:repeat(5,1fr); }
   .zones { flex-direction:row; }
@@ -488,7 +493,9 @@ html, body {
 
 <div class="wrap">
 
-  <!-- HEADER -->
+  <!-- ══════════════════════════════
+       HEADER (always visible)
+  ══════════════════════════════ -->
   <div class="hdr">
     <div class="logo">🍽️</div>
     <h1>WDPRB Healthy  Challenge</h1>
@@ -499,14 +506,22 @@ html, body {
       <span class="rule-pill rp-orange">🧈 มัน &lt;6 ช้อนชา</span>
       <span class="rule-pill rp-blue">🧂 เค็ม &lt;1 ช้อนชา</span>
     </div>
+    <!-- Quick Nav always visible in header -->
+    <div class="quick-nav">
+      <button class="qn-btn active-nav" id="qn-home"  onclick="goTab('home')">🏠 หน้าหลัก</button>
+      <button class="qn-btn qn-g"       id="qn-plate" onclick="goTab('plate')">🍽️ จัดจาน</button>
+      <button class="qn-btn qn-b"       id="qn-quiz"  onclick="goTab('quiz')">🧠 ควิซ</button>
+      <button class="qn-btn qn-o"       id="qn-risk"  onclick="goTab('risk')">📊 ความเสี่ยง</button>
+      <button class="qn-btn qn-gd"      id="qn-lb"    onclick="goTab('lb')">🏆 อันดับ</button>
+    </div>
   </div>
 
   <!-- SCORE BAR -->
   <div class="score-bar">
     <div class="sc g"><div class="si">⭐</div><div class="sl">คะแนน</div><div class="sv" id="sTotal">0</div></div>
-    <div class="sc b"><div class="si">🎯</div><div class="sl">ด่าน</div><div class="sv" id="sLevel">0</div></div>
+    <div class="sc b"><div class="si">🎯</div><div class="sl">ด่าน</div> <div class="sv" id="sLevel">0</div></div>
     <div class="sc p"><div class="si">🔥</div><div class="sl">Streak</div><div class="sv" id="sStreak">0</div></div>
-    <div class="sc o"><div class="si">👑</div><div class="sl">ยศ</div><div class="sv" id="sRank">มือใหม่</div></div>
+    <div class="sc o"><div class="si">👑</div><div class="sl">ยศ</div>   <div class="sv" id="sRank">มือใหม่</div></div>
   </div>
 
   <!-- ══════════ HOME ══════════ -->
@@ -516,35 +531,37 @@ html, body {
       <p>เลือกกิจกรรมเพื่อสะสมคะแนนสุขภาพ</p>
     </div>
     <div class="home-grid">
-      <div class="hc g"  onclick="goTab('plate')"><div class="hi">🍽️</div><div class="ht">จัดจาน 2:1:1</div><div class="hd">วางอาหารให้ถูกช่อง</div><div class="hp">+50 คะแนน</div></div>
-      <div class="hc b"  onclick="goTab('quiz')"> <div class="hi">🧠</div><div class="ht">ควิซ 6:6:1</div>  <div class="hd">ทดสอบความรู้ NCDs</div><div class="hp">+30 คะแนน</div></div>
-      <div class="hc pk" onclick="goTab('risk')"> <div class="hi">📊</div><div class="ht">วัดความเสี่ยง</div><div class="hd">ตรวจพฤติกรรมกิน</div><div class="hp">+20 คะแนน</div></div>
-      <div class="hc gd" onclick="goTab('lb')">   <div class="hi">🏆</div><div class="ht">อันดับ</div>       <div class="hd">Top WDPRB Players</div><div class="hp">Hall of Fame</div></div>
+      <div class="hc g"  onclick="goTab('plate')"><div class="hi">🍽️</div><div class="ht">จัดจาน 2:1:1</div><div class="hd">วางอาหารให้ถูกช่อง ผัก:ข้าว:โปรตีน</div><div class="hp">+50 คะแนน/จาน</div></div>
+      <div class="hc b"  onclick="goTab('quiz')"> <div class="hi">🧠</div><div class="ht">ควิซ 6:6:1</div>  <div class="hd">ทดสอบความรู้ NCDs 10 ข้อ</div>        <div class="hp">+30 คะแนน/ข้อ</div></div>
+      <div class="hc pk" onclick="goTab('risk')"> <div class="hi">📊</div><div class="ht">วัดความเสี่ยง</div><div class="hd">ตรวจพฤติกรรมการกินของคุณ</div>       <div class="hp">+20 คะแนน</div></div>
+      <div class="hc gd" onclick="goTab('lb')">   <div class="hi">🏆</div><div class="ht">อันดับ</div>       <div class="hd">Top Healthy Players WDPRB</div>         <div class="hp">Hall of Fame</div></div>
     </div>
 
-    <!-- Rule Summary -->
     <div class="card" style="border-color:rgba(0,255,136,.2)">
       <div style="font-size:.9rem;font-weight:700;color:var(--green);margin-bottom:12px;">📌 กฎทอง WDPRB</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div style="background:rgba(0,200,100,.07);border-radius:12px;padding:12px;border:1px solid rgba(0,200,100,.2)">
           <div style="font-weight:700;color:var(--green);font-size:.85rem;margin-bottom:6px;">🍽️ สูตรจาน 2:1:1</div>
-          <div style="font-size:.75rem;color:rgba(255,255,255,.75);line-height:1.8">
-            🥦 ผัก <b>2 ส่วน</b><br>🍚 ข้าว <b>1 ส่วน</b><br>🍗 โปรตีน <b>1 ส่วน</b>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.75);line-height:1.85">
+            🥦 ผัก <b>2 ส่วน</b> = ½ จาน<br>
+            🍚 ข้าว <b>1 ส่วน</b> = ¼ จาน<br>
+            🍗 โปรตีน <b>1 ส่วน</b> = ¼ จาน
           </div>
         </div>
         <div style="background:rgba(255,100,100,.07);border-radius:12px;padding:12px;border:1px solid rgba(255,100,100,.2)">
-          <div style="font-weight:700;color:var(--pink);font-size:.85rem;margin-bottom:6px;">⚖️ กฎ 6:6:1/วัน</div>
-          <div style="font-size:.75rem;color:rgba(255,255,255,.75);line-height:1.8">
-            🍬 น้ำตาล ≤<b>6</b> ช้อนชา<br>🧈 น้ำมัน ≤<b>6</b> ช้อนชา<br>🧂 เกลือ ≤<b>1</b> ช้อนชา
+          <div style="font-weight:700;color:var(--pink);font-size:.85rem;margin-bottom:6px;">⚖️ กฎ 6:6:1 ต่อวัน</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.75);line-height:1.85">
+            🍬 น้ำตาล ≤ <b>6</b> ช้อนชา<br>
+            🧈 น้ำมัน ≤ <b>6</b> ช้อนชา<br>
+            🧂 เกลือ ≤ <b>1</b> ช้อนชา
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Badges -->
     <div class="card">
       <div style="font-size:.9rem;font-weight:700;margin-bottom:10px;">🏅 ตราของฉัน</div>
-      <div class="badge-row" id="badgeRow">
+      <div class="badge-row">
         <div class="bdg" id="bd-newbie">🌱 มือใหม่</div>
         <div class="bdg" id="bd-plate">🍽️ Chef 2:1:1</div>
         <div class="bdg" id="bd-quiz">🧠 Quiz Master</div>
@@ -561,7 +578,6 @@ html, body {
       <p>① แตะอาหาร → ② แตะช่องที่ต้องการวาง</p>
     </div>
 
-    <!-- Meta row -->
     <div class="plate-meta">
       <span class="rnd">รอบ <strong id="pRound">1</strong>/3</span>
       <span class="tmr">⏱️ <strong id="pTimer">30</strong> วิ</span>
@@ -570,17 +586,17 @@ html, body {
     <div class="prog-bg"><div class="prog-fill" id="timerBar" style="width:100%"></div></div>
 
     <!-- Selected indicator -->
-    <div class="sel-indicator" id="selInd">
-      <div class="sel-emoji" id="selEmoji">🥦</div>
-      <div class="sel-info">
-        <div class="sel-name" id="selName">บร็อคโคลี่</div>
-        <div class="sel-hint">👆 แตะช่องด้านล่างเพื่อวาง</div>
+    <div class="sel-ind" id="selInd">
+      <div class="se" id="selEmoji">🥦</div>
+      <div>
+        <div class="sn" id="selName">บร็อคโคลี่</div>
+        <div class="sh">👆 แตะช่องด้านล่างเพื่อวาง</div>
       </div>
-      <button class="sel-cancel" onclick="cancelSelect()">✕ ยกเลิก</button>
+      <button class="sc-btn" onclick="cancelSelect()">✕ ยกเลิก</button>
     </div>
 
     <!-- Drop Zones -->
-    <div class="zones" id="zones">
+    <div class="zones">
       <div class="zone vz" id="zone-veg" onclick="dropTo('veg')">
         <div class="zone-hdr">
           <span class="zt">🥦 ผัก & ผลไม้</span>
@@ -607,26 +623,21 @@ html, body {
       </div>
     </div>
 
-    <!-- Food Bank -->
-    <div class="food-bank-wrap">
-      <div class="food-bank-label">👇 แตะเลือกอาหาร (แตะซ้ำเพื่อยกเลิก)</div>
-      <div class="food-bank" id="foodBank"></div>
-    </div>
+    <div class="fb-label">👇 แตะเลือกอาหาร (แตะซ้ำเพื่อยกเลิก)</div>
+    <div class="food-bank" id="foodBank"></div>
 
-    <!-- Action -->
     <div class="action-row">
       <button class="btn-main" onclick="checkPlate()">✅ ตรวจจาน</button>
       <button class="btn-sec"  onclick="clearPlate()">🗑️ ล้าง</button>
       <button class="btn-sec"  onclick="initPlate()">🔄 ใหม่</button>
     </div>
 
-    <!-- Tips -->
-    <div class="card" style="margin-top:12px; border-color:rgba(0,255,136,.15)">
+    <div class="card" style="margin-top:12px;border-color:rgba(0,255,136,.15)">
       <div style="font-size:.85rem;font-weight:700;color:var(--green);margin-bottom:8px;">💡 เคล็ดลับ</div>
       <div style="font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.9">
-        ✅ ผักหลากสี = สารอาหารครบ<br>
-        ✅ ข้าวกล้อง ดีกว่าข้าวขาว<br>
-        ✅ เลือกโปรตีนลีน: ปลา ไก่ ไข่ ถั่ว<br>
+        ✅ ผักต้องมีอย่างน้อย 2 ชนิด หลากสีดีที่สุด<br>
+        ✅ ข้าวกล้องดีกว่าข้าวขาว<br>
+        ✅ โปรตีนลีน: ปลา ไก่ไม่ติดหนัง ไข่ ถั่ว<br>
         ✅ หลีกเลี่ยงอาหารทอด
       </div>
     </div>
@@ -649,7 +660,7 @@ html, body {
       <div class="q-text"  id="qText">กำลังโหลด...</div>
       <div class="q-scene" id="qScene"></div>
       <div class="q-opts"  id="qOpts"></div>
-      <div class="fb" id="qFb"></div>
+      <div class="fb-box"  id="qFb"></div>
     </div>
     <div style="display:flex;gap:8px">
       <button class="btn-main" id="qNext" onclick="nextQ()" style="display:none">ข้อถัดไป ➡️</button>
@@ -661,23 +672,29 @@ html, body {
   <div class="sec" id="s-risk">
     <div class="sec-title">
       <h2>📊 วัดความเสี่ยง NCDs</h2>
-      <p>ปรับแถบตามพฤติกรรมกินจริงของคุณ</p>
+      <p>ปรับแถบตามพฤติกรรมการกินจริงของคุณ</p>
     </div>
     <div class="card">
       <div class="risk-row">
         <label><span>🍬 น้ำตาล (ช้อนชา/วัน)</span><span class="rv" id="rv-s" style="color:var(--pink)">6</span></label>
         <input type="range" class="risk-slider sw" id="rs-s" min="0" max="20" value="6" oninput="updateRisk()">
-        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:rgba(255,255,255,.35);margin-top:3px"><span>0 ดีมาก</span><span>6 ขีดจำกัด</span><span>20 อันตราย</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:rgba(255,255,255,.32);margin-top:3px">
+          <span>0 ดีมาก</span><span>6 ขีดจำกัด</span><span>20 อันตราย</span>
+        </div>
       </div>
       <div class="risk-row">
         <label><span>🧈 น้ำมัน/ไขมัน (ช้อนชา/วัน)</span><span class="rv" id="rv-f" style="color:var(--orange)">6</span></label>
         <input type="range" class="risk-slider sf" id="rs-f" min="0" max="20" value="6" oninput="updateRisk()">
-        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:rgba(255,255,255,.35);margin-top:3px"><span>0 ดีมาก</span><span>6 ขีดจำกัด</span><span>20 อันตราย</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:rgba(255,255,255,.32);margin-top:3px">
+          <span>0 ดีมาก</span><span>6 ขีดจำกัด</span><span>20 อันตราย</span>
+        </div>
       </div>
       <div class="risk-row">
         <label><span>🧂 เกลือ/โซเดียม (ช้อนชา/วัน)</span><span class="rv" id="rv-sa" style="color:var(--blue)">1</span></label>
         <input type="range" class="risk-slider ss" id="rs-sa" min="0" max="5" value="1" oninput="updateRisk()">
-        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:rgba(255,255,255,.35);margin-top:3px"><span>0 ดีมาก</span><span>1 ขีดจำกัด</span><span>5 อันตราย</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:.65rem;color:rgba(255,255,255,.32);margin-top:3px">
+          <span>0 ดีมาก</span><span>1 ขีดจำกัด</span><span>5 อันตราย</span>
+        </div>
       </div>
     </div>
     <div class="gauge-wrap">
@@ -687,7 +704,7 @@ html, body {
       <div class="g-desc"   id="gDesc">ควรระวัง</div>
     </div>
     <div id="rTips"></div>
-    <button class="btn-main" onclick="saveRisk()">💾 บันทึก (+20 คะแนน)</button>
+    <button class="btn-main" onclick="saveRisk()">💾 บันทึกผล (+20 คะแนน)</button>
   </div>
 
   <!-- ══════════ LEADERBOARD ══════════ -->
@@ -709,104 +726,132 @@ html, body {
 
 </div><!-- /wrap -->
 
-<!-- BOTTOM NAV -->
-<div class="bot-nav">
-  <button class="bn on" id="bn-home"  onclick="goTab('home')"> <span class="bi">🏠</span><span class="bl">หน้าหลัก</span></button>
-  <button class="bn"    id="bn-plate" onclick="goTab('plate')"><span class="bi">🍽️</span><span class="bl">จัดจาน</span></button>
-  <button class="bn"    id="bn-quiz"  onclick="goTab('quiz')"> <span class="bi">🧠</span><span class="bl">ควิซ</span></button>
-  <button class="bn"    id="bn-risk"  onclick="goTab('risk')"> <span class="bi">📊</span><span class="bl">ความเสี่ยง</span></button>
-  <button class="bn"    id="bn-lb"    onclick="goTab('lb')">   <span class="bi">🏆</span><span class="bl">อันดับ</span></button>
-</div>
+<!-- ════════════════════════════════
+     BOTTOM NAV — fixed, centered
+════════════════════════════════ -->
+<nav class="bot-nav">
+  <button class="bn on" id="bn-home"  onclick="goTab('home')">
+    <div class="bi-wrap"><span class="bi">🏠</span></div><span class="bl">หน้าหลัก</span>
+  </button>
+  <button class="bn" id="bn-plate" onclick="goTab('plate')">
+    <div class="bi-wrap"><span class="bi">🍽️</span></div><span class="bl">จัดจาน</span>
+  </button>
+  <button class="bn" id="bn-quiz" onclick="goTab('quiz')">
+    <div class="bi-wrap"><span class="bi">🧠</span></div><span class="bl">ควิซ</span>
+  </button>
+  <button class="bn" id="bn-risk" onclick="goTab('risk')">
+    <div class="bi-wrap"><span class="bi">📊</span></div><span class="bl">ความเสี่ยง</span>
+  </button>
+  <button class="bn" id="bn-lb" onclick="goTab('lb')">
+    <div class="bi-wrap"><span class="bi">🏆</span></div><span class="bl">อันดับ</span>
+  </button>
+</nav>
 
 <script>
-/* ══════════════════════════════════
+/* ══════════════════════════════════════
    DATA
-══════════════════════════════════ */
+══════════════════════════════════════ */
 const FOODS = [
   {id:'v1',e:'🥦',n:'บร็อคโคลี่',c:'veg'},
-  {id:'v2',e:'🥕',n:'แครอท',c:'veg'},
-  {id:'v3',e:'🍅',n:'มะเขือเทศ',c:'veg'},
-  {id:'v4',e:'🥬',n:'คะน้า',c:'veg'},
-  {id:'v5',e:'🫑',n:'พริกหวาน',c:'veg'},
-  {id:'v6',e:'🥒',n:'แตงกวา',c:'veg'},
-  {id:'v7',e:'🍠',n:'มันหวาน',c:'veg'},
-  {id:'c1',e:'🍚',n:'ข้าวกล้อง',c:'carb'},
-  {id:'c2',e:'🍞',n:'ขนมปังโฮล',c:'carb'},
-  {id:'c3',e:'🌽',n:'ข้าวโพด',c:'carb'},
-  {id:'c4',e:'🥔',n:'มันฝรั่ง',c:'carb'},
-  {id:'p1',e:'🍗',n:'ไก่อบ',c:'pro'},
-  {id:'p2',e:'🐟',n:'ปลาทูนึ่ง',c:'pro'},
-  {id:'p3',e:'🥚',n:'ไข่ต้ม',c:'pro'},
-  {id:'p4',e:'🫘',n:'ถั่วแดง',c:'pro'},
-  {id:'p5',e:'🦐',n:'กุ้งนึ่ง',c:'pro'},
+  {id:'v2',e:'🥕',n:'แครอท',     c:'veg'},
+  {id:'v3',e:'🍅',n:'มะเขือเทศ', c:'veg'},
+  {id:'v4',e:'🥬',n:'คะน้า',     c:'veg'},
+  {id:'v5',e:'🫑',n:'พริกหวาน',  c:'veg'},
+  {id:'v6',e:'🥒',n:'แตงกวา',    c:'veg'},
+  {id:'v7',e:'🍠',n:'มันหวาน',   c:'veg'},
+  {id:'c1',e:'🍚',n:'ข้าวกล้อง', c:'carb'},
+  {id:'c2',e:'🍞',n:'ขนมปังโฮล', c:'carb'},
+  {id:'c3',e:'🌽',n:'ข้าวโพด',   c:'carb'},
+  {id:'c4',e:'🥔',n:'มันฝรั่ง',  c:'carb'},
+  {id:'p1',e:'🍗',n:'ไก่อบ',     c:'pro'},
+  {id:'p2',e:'🐟',n:'ปลาทูนึ่ง', c:'pro'},
+  {id:'p3',e:'🥚',n:'ไข่ต้ม',    c:'pro'},
+  {id:'p4',e:'🫘',n:'ถั่วแดง',   c:'pro'},
+  {id:'p5',e:'🦐',n:'กุ้งนึ่ง',  c:'pro'},
 ];
 
 const QUIZ = [
-  {q:'กฎ 6:6:1 หมายถึงอะไร?',s:'ปริมาณสูงสุดต่อวันสำหรับผู้ใหญ่',
-   o:['น้ำตาล 6 ช้อนโต๊ะ น้ำมัน 6 ช้อนชา เกลือ 1 ช้อนชา','น้ำตาล 6 ช้อนชา น้ำมัน 6 ช้อนชา เกลือ 1 ช้อนชา','น้ำตาล 6 แก้ว น้ำมัน 6 ช้อน เกลือ 1 ช้อน','น้ำตาล 6 กรัม น้ำมัน 6 มล. เกลือ 1 กก.'],
-   a:1,x:'กฎ 6:6:1 ของกรมอนามัย: น้ำตาล≤6 ช้อนชา น้ำมัน≤6 ช้อนชา เกลือ≤1 ช้อนชา ต่อวัน'},
-  {q:'สูตรจาน 2:1:1 คืออะไร?',s:'วิธีจัดสัดส่วนอาหารในจาน',
-   o:['เนื้อ2:ผัก1:ข้าว1','ผัก2:ข้าว1:โปรตีน1','ข้าว2:ผัก1:เนื้อ1','ผลไม้2:ขนม1:น้ำ1'],
-   a:1,x:'ผัก 2 ส่วน (ครึ่งจาน) + ข้าว/แป้ง 1 ส่วน (¼ จาน) + โปรตีน 1 ส่วน (¼ จาน)'},
-  {q:'NCDs หลักในพนักงานโรงงานคือโรคใด?',s:'NCD = Non-Communicable Diseases',
+  {q:'กฎ 6:6:1 หมายถึงอะไร?',
+   s:'ปริมาณสูงสุดต่อวันสำหรับผู้ใหญ่',
+   o:['น้ำตาล 6 ช้อนโต๊ะ น้ำมัน 6 ช้อนชา เกลือ 1 ช้อนชา',
+      'น้ำตาล 6 ช้อนชา น้ำมัน 6 ช้อนชา เกลือ 1 ช้อนชา',
+      'น้ำตาล 6 แก้ว น้ำมัน 6 ช้อน เกลือ 1 ช้อน',
+      'น้ำตาล 6 กรัม น้ำมัน 6 มล. เกลือ 1 กก.'],
+   a:1, x:'กฎ 6:6:1 ของกรมอนามัย: น้ำตาล≤6 ช้อนชา (24ก.) น้ำมัน≤6 ช้อนชา (30ก.) เกลือ≤1 ช้อนชา (5ก.) ต่อวัน'},
+  {q:'สูตรจาน 2:1:1 คืออะไร?',
+   s:'วิธีจัดสัดส่วนอาหารในจาน',
+   o:['เนื้อ 2 : ผัก 1 : ข้าว 1','ผัก 2 : ข้าว 1 : โปรตีน 1','ข้าว 2 : ผัก 1 : เนื้อ 1','ผลไม้ 2 : ขนม 1 : น้ำ 1'],
+   a:1, x:'ผัก 2 ส่วน (ครึ่งจาน) + ข้าว/แป้ง 1 ส่วน (¼ จาน) + โปรตีน 1 ส่วน (¼ จาน)'},
+  {q:'NCDs หลักในพนักงานโรงงานคือโรคใด?',
+   s:'NCD = Non-Communicable Diseases โรคไม่ติดต่อ',
    o:['ไข้หวัด COVID-19','เบาหวาน ความดัน ไขมันในเลือดสูง','มาลาเรีย ไข้เลือดออก','อหิวาตกโรค บิด'],
-   a:1,x:'NCDs หลัก: เบาหวาน ความดันโลหิตสูง โรคหัวใจ ไขมันสูง — มักเกิดจากพฤติกรรมการกิน'},
-  {q:'น้ำตาล 1 ช้อนชา มีกี่กรัม?',s:'รู้จักหน่วยก่อนคำนวณ',
+   a:1, x:'NCDs หลัก: เบาหวาน ความดันโลหิตสูง โรคหัวใจ ไขมันสูง มักเกิดจากพฤติกรรมการกินและนั่งนาน'},
+  {q:'น้ำตาล 1 ช้อนชา มีกี่กรัม?',
+   s:'รู้จักหน่วยก่อนคำนวณปริมาณน้ำตาล',
    o:['1 กรัม','4 กรัม','10 กรัม','15 กรัม'],
-   a:1,x:'น้ำตาล 1 ช้อนชา = 4 กรัม ดังนั้น 6 ช้อนชา = 24 กรัมต่อวัน'},
-  {q:'อาหารใดมีโซเดียมสูงมาก?',s:'โซเดียม = เกลือ ความดัน NCDs',
+   a:1, x:'น้ำตาล 1 ช้อนชา = 4 กรัม ดังนั้น 6 ช้อนชา = 24 กรัม/วัน'},
+  {q:'อาหารใดมีโซเดียมสูงมาก?',
+   s:'โซเดียมสูง → ความดันโลหิตสูง → NCDs',
    o:['ผลไม้สดไม่ปรุง','ข้าวผัด 1 จาน','ข้าวกล้องต้ม','ผักลวกไม่ปรุงรส'],
-   a:1,x:'ข้าวผัด 1 จาน มีโซเดียม ~1,200-2,000 มก. ≈ เกลือเกือบ 1 ช้อนชา/วัน'},
-  {q:'ไขมันชนิดใดอันตรายที่สุด?',s:'ไขมันต่างชนิดมีผลต่างกัน',
+   a:1, x:'ข้าวผัด 1 จาน มีโซเดียม ~1,200–2,000 มก. เกือบเท่ากับเกลือ 1 ช้อนชา/วัน'},
+  {q:'ไขมันชนิดใดอันตรายที่สุด?',
+   s:'ไขมันต่างชนิดมีผลต่อสุขภาพต่างกัน',
    o:['Omega-3 จากปลาทะเล','ไขมันทรานส์จากมาร์การีนและของทอด','น้ำมันมะกอก Extra Virgin','น้ำมันรำข้าว'],
-   a:1,x:'ไขมันทรานส์เพิ่ม LDL (เลว) ลด HDL (ดี) เสี่ยงโรคหัวใจมากที่สุด'},
-  {q:'ชาเขียวพร้อมดื่ม 1 ขวดมีน้ำตาลเท่าไหร่?',s:'กฎ: น้ำตาล ≤24 กรัม (6 ช้อนชา)/วัน',
-   o:['5 กรัม','10 กรัม','20 กรัม','30-40 กรัม (เกินกว่ากฎ!)'],
-   a:3,x:'ชาเขียวพร้อมดื่ม 1 ขวด มักมีน้ำตาล 30-40 กรัม = 7-10 ช้อนชา เกินกว่ากฎ 6 ช้อนชา'},
-  {q:'กินผักสีรุ้ง (Rainbow) ดียังไง?',s:'Eat the Rainbow = กินผักหลากสี',
-   o:['ไม่มีประโยชน์ สีไม่สำคัญ','แต่ละสีให้วิตามินและสารต้านอนุมูลอิสระต่างกัน','ผักสีเขียวดีที่สุด กินสีเดียวพอ','ผักสีขาวมีสารอาหารสูงสุด'],
-   a:1,x:'เขียว=โฟเลต, ส้ม=เบต้าแคโรทีน, แดง=ไลโคพีน, ม่วง=แอนโทไซยานิน'},
-  {q:'พนักงานโรงงานควรดื่มน้ำวันละเท่าไหร่?',s:'ทำงานในพื้นที่ร้อน ต้องการน้ำมากขึ้น',
-   o:['0.5 ลิตร','1 ลิตร','2-3 ลิตร หรือมากกว่าถ้าร้อน','ดื่มแค่ตอนหิวก็พอ'],
-   a:2,x:'2-3 ลิตร/วัน และเพิ่มขึ้นถ้าอยู่ในที่ร้อนหรือออกแรงมาก'},
-  {q:'อาหารว่างชนิดใดดีที่สุดสำหรับพักเบรค?',s:'พักกลางวันที่ WDPRB',
-   o:['ขนมกรุบกรอบ+น้ำอัดลม','ผลไม้สด+น้ำเปล่า','เค้ก 2 ชิ้น+กาแฟน้ำตาล 3 ช้อน','มันทอด+ชานมไข่มุก'],
-   a:1,x:'ผลไม้สด+น้ำเปล่า: วิตามิน ใยอาหาร น้ำตาลธรรมชาติ พลังงานต่อเนื่อง'},
+   a:1, x:'ไขมันทรานส์เพิ่ม LDL (เลว) ลด HDL (ดี) เสี่ยงโรคหัวใจมากที่สุด'},
+  {q:'ชาเขียวพร้อมดื่ม 1 ขวดมีน้ำตาลเท่าไหร่?',
+   s:'กฎ: น้ำตาล ≤ 24 กรัม (6 ช้อนชา) ต่อวัน',
+   o:['5 กรัม','10 กรัม','20 กรัม','30–40 กรัม (เกินกว่ากฎ!)'],
+   a:3, x:'ชาเขียวพร้อมดื่ม 1 ขวด มักมีน้ำตาล 30–40 กรัม = 7–10 ช้อนชา เกินกฎแล้ว!'},
+  {q:'กินผักสีรุ้ง (Rainbow) ดีอย่างไร?',
+   s:'Eat the Rainbow = กินผักหลากสี',
+   o:['ไม่มีประโยชน์ สีไม่สำคัญ',
+      'แต่ละสีให้วิตามินและสารต้านอนุมูลอิสระต่างกัน',
+      'ผักสีเขียวดีที่สุด กินสีเดียวพอ',
+      'ผักสีขาวมีสารอาหารสูงสุด'],
+   a:1, x:'เขียว=โฟเลต, ส้ม=เบต้าแคโรทีน, แดง=ไลโคพีน, ม่วง=แอนโทไซยานิน ต้องกินหลายสี'},
+  {q:'พนักงานโรงงานควรดื่มน้ำวันละเท่าไหร่?',
+   s:'ทำงานในพื้นที่ร้อน ร่างกายต้องการน้ำมากขึ้น',
+   o:['0.5 ลิตร (2 แก้ว)','1 ลิตร (4 แก้ว)','2–3 ลิตร หรือมากกว่าถ้าร้อน','ดื่มแค่ตอนหิวก็พอ'],
+   a:2, x:'2–3 ลิตร/วัน และเพิ่มขึ้นถ้าอยู่ในที่ร้อนหรือออกแรงมาก'},
+  {q:'อาหารว่างชนิดใดดีที่สุดสำหรับพักเบรค?',
+   s:'พักกลางวันที่ WDPRB ควรเลือกอะไร?',
+   o:['ขนมกรุบกรอบ + น้ำอัดลม',
+      'ผลไม้สด + น้ำเปล่า',
+      'เค้ก 2 ชิ้น + กาแฟน้ำตาล 3 ช้อน',
+      'มันทอด + ชานมไข่มุก'],
+   a:1, x:'ผลไม้สด + น้ำเปล่า ให้วิตามิน ใยอาหาร น้ำตาลธรรมชาติ พลังงานต่อเนื่องไม่สูงชั่วคราว'},
 ];
 
-const LB_DATA = [
-  {n:'สมหมาย ใจดี',d:'แผนก A',s:520,b:'🥇'},
-  {n:'นิดา สุขสม',d:'แผนก B',s:480,b:'🥈'},
-  {n:'วิชัย มานะ',d:'แผนก C',s:445,b:'🥉'},
-  {n:'สุนีย์ รักสุข',d:'แผนก D',s:390,b:'🏅'},
-  {n:'ประยุทธ์ เก่งกล้า',d:'แผนก E',s:360,b:'🏅'},
-  {n:'มาลี สดใส',d:'แผนก A',s:310,b:'⭐'},
-  {n:'คุณ (ฉัน)',d:'WDPRB',s:0,b:'🌱',me:true},
+const LB = [
+  {n:'สมหมาย ใจดี',      d:'แผนก A', s:520, b:'🥇'},
+  {n:'นิดา สุขสม',       d:'แผนก B', s:480, b:'🥈'},
+  {n:'วิชัย มานะ',       d:'แผนก C', s:445, b:'🥉'},
+  {n:'สุนีย์ รักสุข',    d:'แผนก D', s:390, b:'🏅'},
+  {n:'ประยุทธ์ เก่งกล้า',d:'แผนก E', s:360, b:'🏅'},
+  {n:'มาลี สดใส',        d:'แผนก A', s:310, b:'⭐'},
+  {n:'คุณ (ฉัน)',         d:'WDPRB',  s:0,   b:'🌱', me:true},
 ];
 
-/* ══════════════════════════════════
+/* ══════════════════════════════════════
    STATE
-══════════════════════════════════ */
+══════════════════════════════════════ */
 const G = {
   score:0, level:0, streak:0,
-  // plate
   placed:{veg:[],carb:[],pro:[]},
   selected:null,
   pRound:1, pPassed:0, pTimer:30, pTick:null,
-  // quiz
   qIdx:0, qScore:0, qAnswered:false,
-  // risk
   riskSaved:false,
-  // badges
   badges:{newbie:false,plate:false,quiz:false,healthy:false,streak:false},
+  currentTab:'home',
 };
 
-/* ══════════════════════════════════
+/* ══════════════════════════════════════
    PARTICLES
-══════════════════════════════════ */
+══════════════════════════════════════ */
 (function(){
-  const c=document.getElementById('particles');
-  const cols=['#00ff88','#00ccff','#ff6b9d','#ffd700','#aa88ff'];
+  const c = document.getElementById('particles');
+  const cols = ['#00ff88','#00ccff','#ff6b9d','#ffd700','#aa88ff'];
   for(let i=0;i<20;i++){
     const p=document.createElement('div'); p.className='pt';
     const sz=Math.random()*7+3, col=cols[~~(Math.random()*5)];
@@ -815,366 +860,480 @@ const G = {
   }
 })();
 
-/* ══════════════════════════════════
+/* ══════════════════════════════════════
    NAVIGATION
-══════════════════════════════════ */
-const TABS=['home','plate','quiz','risk','lb'];
-function goTab(t){
-  TABS.forEach(id=>{
+══════════════════════════════════════ */
+const TABS = ['home','plate','quiz','risk','lb'];
+
+function goTab(t) {
+  G.currentTab = t;
+
+  // Show/hide sections
+  TABS.forEach(id => {
     document.getElementById('s-'+id).classList.toggle('on', id===t);
+  });
+
+  // Bottom nav highlight
+  TABS.forEach(id => {
     document.getElementById('bn-'+id).classList.toggle('on', id===t);
   });
+
+  // Quick nav in header highlight
+  TABS.forEach(id => {
+    const el = document.getElementById('qn-'+id);
+    if(el) el.classList.toggle('active-nav', id===t);
+  });
+
+  // Scroll to top
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  // Init on first visit
   if(t==='plate' && !G.pTick) initPlate();
   if(t==='quiz'  && G.qIdx===0) loadQ(0);
   if(t==='lb') renderLB();
 }
 
-/* ══════════════════════════════════
+/* ══════════════════════════════════════
    UI HELPERS
-══════════════════════════════════ */
-function toast(icon,title,msg,col='#00ff88'){
-  const el=document.getElementById('toast');
-  document.getElementById('ti').textContent=icon;
-  document.getElementById('tt').textContent=title;
-  document.getElementById('tm').textContent=msg;
-  el.style.borderColor=col+'55';
+══════════════════════════════════════ */
+function toast(icon, title, msg, col='#00ff88') {
+  const el = document.getElementById('toast');
+  document.getElementById('ti').textContent = icon;
+  document.getElementById('tt').textContent = title;
+  document.getElementById('tm').textContent = msg;
+  el.style.borderColor = col+'55';
   el.classList.add('show');
   clearTimeout(el._t);
-  el._t=setTimeout(()=>el.classList.remove('show'),3200);
+  el._t = setTimeout(()=>el.classList.remove('show'), 3200);
 }
-function openModal(icon,title,pts,msg){
-  document.getElementById('mi').textContent=icon;
-  document.getElementById('mt').textContent=title;
-  document.getElementById('mp').textContent=pts;
-  document.getElementById('mm').textContent=msg;
+
+function openModal(icon, title, pts, msg) {
+  document.getElementById('mi').textContent = icon;
+  document.getElementById('mt').textContent = title;
+  document.getElementById('mp').textContent = pts;
+  document.getElementById('mm').textContent = msg;
   document.getElementById('modal').classList.add('show');
 }
-function closeModal(){ document.getElementById('modal').classList.remove('show'); }
-
-function addScore(n){
-  G.score+=n;
-  document.getElementById('sTotal').textContent=G.score;
-  updateRank(); updateMyLB();
-}
-function updateRank(){
-  const R=[[0,'มือใหม่'],[100,'รักสุขภาพ'],[250,'Fit Fighter'],[450,'NCD Hero'],[700,'Champion'],[1000,'Legend']];
-  let r=R[0][1]; for(const[m,l]of R){if(G.score>=m)r=l;}
-  document.getElementById('sRank').textContent=r;
-}
-function earnBadge(k){
-  if(G.badges[k])return;
-  G.badges[k]=true;
-  const el=document.getElementById('bd-'+k);
-  if(el)el.classList.add('earned');
-  const names={newbie:'🌱 ได้ตรา มือใหม่',plate:'🍽️ ได้ตรา Chef 2:1:1',quiz:'🧠 ได้ตรา Quiz Master',healthy:'💪 ได้ตรา NCD Fighter',streak:'🔥 ได้ตรา On Fire'};
-  toast('🏅','ได้รับตราใหม่!',names[k],'#ffd700');
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
 }
 
-/* ══════════════════════════════════
+function addScore(n) {
+  G.score += n;
+  document.getElementById('sTotal').textContent = G.score;
+  updateRank();
+  updateMyLB();
+}
+
+function updateRank() {
+  const R = [
+    [0,   'มือใหม่'],
+    [100, 'รักสุขภาพ'],
+    [250, 'Fit Fighter'],
+    [450, 'NCD Hero'],
+    [700, 'Champion'],
+    [1000,'Legend 🏆'],
+  ];
+  let r = R[0][1];
+  for(const [m,l] of R) { if(G.score>=m) r=l; }
+  document.getElementById('sRank').textContent = r;
+}
+
+function earnBadge(k) {
+  if(G.badges[k]) return;
+  G.badges[k] = true;
+  const el = document.getElementById('bd-'+k);
+  if(el) el.classList.add('earned');
+  const names = {
+    newbie:'🌱 ได้ตรา มือใหม่',
+    plate: '🍽️ ได้ตรา Chef 2:1:1',
+    quiz:  '🧠 ได้ตรา Quiz Master',
+    healthy:'💪 ได้ตรา NCD Fighter',
+    streak:'🔥 ได้ตรา On Fire',
+  };
+  toast('🏅','ได้รับตราใหม่!', names[k], '#ffd700');
+}
+
+/* ══════════════════════════════════════
    PLATE GAME
-══════════════════════════════════ */
-function initPlate(){
+══════════════════════════════════════ */
+function initPlate() {
   clearInterval(G.pTick);
-  G.selected=null; G.placed={veg:[],carb:[],pro:[]};
-  G.pTimer=30;
-  hideSelIndicator();
+  G.selected = null;
+  G.placed = {veg:[],carb:[],pro:[]};
+  G.pTimer = 30;
+  hideSelInd();
   renderPlaced();
 
-  // Random foods
-  const shuffle=arr=>[...arr].sort(()=>Math.random()-.5);
+  const shuffle = arr => [...arr].sort(()=>Math.random()-.5);
   const vegs  = shuffle(FOODS.filter(f=>f.c==='veg')).slice(0,4);
   const carbs = shuffle(FOODS.filter(f=>f.c==='carb')).slice(0,3);
   const pros  = shuffle(FOODS.filter(f=>f.c==='pro')).slice(0,3);
   const foods = shuffle([...vegs,...carbs,...pros]);
 
-  const fb=document.getElementById('foodBank');
-  fb.innerHTML='';
-  foods.forEach(food=>{
-    const d=document.createElement('div');
-    d.className='fi'; d.id='fi-'+food.id;
-    d.dataset.id=food.id; d.dataset.cat=food.c;
-    d.innerHTML=`<div class="fe">${food.e}</div><div class="fn">${food.n}</div><div class="fc ${food.c}">${food.c==='veg'?'ผัก':food.c==='carb'?'คาร์บ':'โปรตีน'}</div>`;
-    d.addEventListener('click',()=>tapFood(d,food));
+  const fb = document.getElementById('foodBank');
+  fb.innerHTML = '';
+  foods.forEach(food => {
+    const d = document.createElement('div');
+    d.className = 'fi';
+    d.id = 'fi-'+food.id;
+    d.dataset.id  = food.id;
+    d.dataset.cat = food.c;
+    d.innerHTML = `
+      <div class="fe">${food.e}</div>
+      <div class="fn">${food.n}</div>
+      <div class="fc ${food.c}">${food.c==='veg'?'ผัก':food.c==='carb'?'คาร์บ':'โปรตีน'}</div>`;
+    d.addEventListener('click', ()=>tapFood(d, food));
     fb.appendChild(d);
   });
 
-  // Timer
-  document.getElementById('timerBar').style.width='100%';
-  document.getElementById('pTimer').textContent='30';
-  G.pTick=setInterval(()=>{
+  document.getElementById('timerBar').style.width = '100%';
+  document.getElementById('pTimer').textContent   = '30';
+  G.pTick = setInterval(()=>{
     G.pTimer--;
-    const pct=G.pTimer/30*100;
-    document.getElementById('pTimer').textContent=G.pTimer;
-    document.getElementById('timerBar').style.width=pct+'%';
-    if(G.pTimer<=0){ clearInterval(G.pTick); G.pTick=null; toast('⏱️','หมดเวลา!','แตะ 🔄 เพื่อเล่นใหม่','#ff5050'); }
-  },1000);
+    const pct = G.pTimer / 30 * 100;
+    document.getElementById('pTimer').textContent       = G.pTimer;
+    document.getElementById('timerBar').style.width     = pct+'%';
+    if(G.pTimer <= 0) {
+      clearInterval(G.pTick); G.pTick = null;
+      toast('⏱️','หมดเวลา!','แตะ 🔄 เพื่อเล่นใหม่','#ff5050');
+    }
+  }, 1000);
 
-  document.getElementById('pRound').textContent=G.pRound;
-  document.getElementById('pPassed').textContent=G.pPassed;
-  // reset zone classes
-  ['veg','carb','pro'].forEach(z=>{
-    const el=document.getElementById('zone-'+z);
-    el.classList.remove('hit','pulse-vz','pulse-cz','pulse-pz');
+  document.getElementById('pRound').textContent  = G.pRound;
+  document.getElementById('pPassed').textContent = G.pPassed;
+
+  ['veg','carb','pro'].forEach(z => {
+    const el = document.getElementById('zone-'+z);
+    el.classList.remove('hit','pulse-v','pulse-c','pulse-p');
   });
 }
 
-function tapFood(el,food){
-  if(el.classList.contains('used'))return;
-  if(G.selected && G.selected.id===food.id){
-    // deselect
+function tapFood(el, food) {
+  if(el.classList.contains('used')) return;
+
+  // Tap same → deselect
+  if(G.selected && G.selected.id === food.id) {
     el.classList.remove('on');
-    G.selected=null; hideSelIndicator(); removePulse(); return;
+    G.selected = null;
+    hideSelInd();
+    removePulse();
+    return;
   }
-  // deselect previous
+
+  // Deselect previous
   document.querySelectorAll('.fi.on').forEach(f=>f.classList.remove('on'));
   el.classList.add('on');
-  G.selected=food;
-  showSelIndicator(food);
-  // pulse zones matching category
+  G.selected = food;
+  showSelInd(food);
+
   removePulse();
-  const map={veg:'pulse-vz',carb:'pulse-cz',pro:'pulse-pz'};
-  document.getElementById('zone-'+food.c).classList.add(map[food.c]);
+  const pm = {veg:'pulse-v', carb:'pulse-c', pro:'pulse-p'};
+  document.getElementById('zone-'+food.c).classList.add(pm[food.c]);
 }
 
-function dropTo(zone){
-  if(!G.selected){ toast('👆','เลือกอาหารก่อน!','แตะอาหารในรายการด้านล่างก่อน','#ffaa00'); return; }
-  // Place item
+function dropTo(zone) {
+  if(!G.selected) {
+    toast('👆','เลือกอาหารก่อน!','แตะอาหารในรายการด้านล่างก่อน','#ffaa00');
+    return;
+  }
   G.placed[zone].push(G.selected);
-  const el=document.getElementById('fi-'+G.selected.id);
-  if(el){ el.classList.add('used'); el.classList.remove('on'); }
-  // Zone hit effect
-  const zEl=document.getElementById('zone-'+zone);
+
+  const el = document.getElementById('fi-'+G.selected.id);
+  if(el) { el.classList.add('used'); el.classList.remove('on'); }
+
+  const zEl = document.getElementById('zone-'+zone);
   zEl.classList.add('hit');
-  setTimeout(()=>zEl.classList.remove('hit'),400);
-  G.selected=null; hideSelIndicator(); removePulse();
+  setTimeout(()=>zEl.classList.remove('hit'), 400);
+
+  const zoneName = {veg:'ผัก',carb:'ข้าว',pro:'โปรตีน'}[zone];
+  toast('✅','วางแล้ว!', G.selected.n+' → ช่อง'+zoneName);
+
+  G.selected = null;
+  hideSelInd();
+  removePulse();
   renderPlaced();
-  toast('✅','วางแล้ว!',G.placed[zone][G.placed[zone].length-1].n+' วางในช่อง '+{veg:'ผัก',carb:'ข้าว',pro:'โปรตีน'}[zone],'#00ff88');
 }
 
-function renderPlaced(){
-  ['veg','carb','pro'].forEach(zone=>{
-    const row=document.getElementById('pr-'+zone);
-    const hint=document.getElementById('zh-'+zone);
-    row.innerHTML='';
-    G.placed[zone].forEach((food,idx)=>{
-      const chip=document.createElement('div');
-      chip.className='placed-chip';
-      chip.innerHTML=`<span class="ce">${food.e}</span><span class="cn">${food.n}</span><span class="cx">✕</span>`;
-      chip.onclick=()=>removeItem(zone,idx,food);
+function renderPlaced() {
+  ['veg','carb','pro'].forEach(zone => {
+    const row  = document.getElementById('pr-'+zone);
+    const hint = document.getElementById('zh-'+zone);
+    row.innerHTML = '';
+    G.placed[zone].forEach((food,idx) => {
+      const chip = document.createElement('div');
+      chip.className = 'p-chip';
+      chip.innerHTML = `<span class="ce">${food.e}</span><span class="cn">${food.n}</span><span class="cx">✕</span>`;
+      chip.onclick = ()=>removeItem(zone, idx, food);
       row.appendChild(chip);
     });
-    hint.style.display=G.placed[zone].length?'none':'block';
+    hint.style.display = G.placed[zone].length ? 'none' : 'block';
   });
 }
 
-function removeItem(zone,idx,food){
-  G.placed[zone].splice(idx,1);
-  const el=document.getElementById('fi-'+food.id);
-  if(el){ el.classList.remove('used','on'); }
-  if(G.selected && G.selected.id===food.id){ G.selected=null; hideSelIndicator(); removePulse(); }
-  renderPlaced();
-}
-
-function clearPlate(){
-  ['veg','carb','pro'].forEach(zone=>{
-    G.placed[zone].forEach(food=>{
-      const el=document.getElementById('fi-'+food.id);
-      if(el){ el.classList.remove('used','on'); }
-    });
-    G.placed[zone]=[];
-  });
-  G.selected=null; hideSelIndicator(); removePulse();
-  renderPlaced();
-}
-
-function cancelSelect(){
-  if(G.selected){
-    const el=document.getElementById('fi-'+G.selected.id);
-    if(el)el.classList.remove('on');
-    G.selected=null;
+function removeItem(zone, idx, food) {
+  G.placed[zone].splice(idx, 1);
+  const el = document.getElementById('fi-'+food.id);
+  if(el) { el.classList.remove('used','on'); }
+  if(G.selected && G.selected.id===food.id) {
+    G.selected = null; hideSelInd(); removePulse();
   }
-  hideSelIndicator(); removePulse();
+  renderPlaced();
 }
 
-function showSelIndicator(food){
-  document.getElementById('selEmoji').textContent=food.e;
-  document.getElementById('selName').textContent=food.n;
+function clearPlate() {
+  ['veg','carb','pro'].forEach(zone => {
+    G.placed[zone].forEach(food => {
+      const el = document.getElementById('fi-'+food.id);
+      if(el) { el.classList.remove('used','on'); }
+    });
+    G.placed[zone] = [];
+  });
+  G.selected = null;
+  hideSelInd();
+  removePulse();
+  renderPlaced();
+}
+
+function cancelSelect() {
+  if(G.selected) {
+    const el = document.getElementById('fi-'+G.selected.id);
+    if(el) el.classList.remove('on');
+    G.selected = null;
+  }
+  hideSelInd();
+  removePulse();
+}
+
+function showSelInd(food) {
+  document.getElementById('selEmoji').textContent = food.e;
+  document.getElementById('selName').textContent  = food.n;
   document.getElementById('selInd').classList.add('show');
 }
-function hideSelIndicator(){ document.getElementById('selInd').classList.remove('show'); }
-function removePulse(){
-  document.getElementById('zone-veg').classList.remove('pulse-vz');
-  document.getElementById('zone-carb').classList.remove('pulse-cz');
-  document.getElementById('zone-pro').classList.remove('pulse-pz');
+function hideSelInd() {
+  document.getElementById('selInd').classList.remove('show');
+}
+function removePulse() {
+  document.getElementById('zone-veg').classList.remove('pulse-v');
+  document.getElementById('zone-carb').classList.remove('pulse-c');
+  document.getElementById('zone-pro').classList.remove('pulse-p');
 }
 
-function checkPlate(){
-  const v=G.placed.veg, c=G.placed.carb, p=G.placed.pro;
-  const total=v.length+c.length+p.length;
-  if(total===0){ toast('⚠️','ยังว่างอยู่!','วางอาหารลงในช่องก่อนนะ','#ffaa00'); return; }
-  const wrongV=v.some(f=>f.c!=='veg');
-  const wrongC=c.some(f=>f.c!=='carb');
-  const wrongP=p.some(f=>f.c!=='pro');
-  const ok=v.length>=2 && c.length===1 && p.length===1 && !wrongV && !wrongC && !wrongP;
-  clearInterval(G.pTick); G.pTick=null;
-  if(ok){
-    G.streak++; G.level++; G.pPassed++; G.pRound=Math.min(G.pRound+1,3);
-    document.getElementById('sLevel').textContent=G.level;
-    document.getElementById('sStreak').textContent=G.streak;
-    addScore(50); earnBadge('newbie'); earnBadge('plate');
-    if(G.streak>=3)earnBadge('streak');
+function checkPlate() {
+  const v = G.placed.veg;
+  const c = G.placed.carb;
+  const p = G.placed.pro;
+  const total = v.length + c.length + p.length;
+
+  if(total === 0) {
+    toast('⚠️','ยังว่างอยู่!','วางอาหารลงในช่องก่อนนะ','#ffaa00');
+    return;
+  }
+
+  const wrongV = v.some(f=>f.c!=='veg');
+  const wrongC = c.some(f=>f.c!=='carb');
+  const wrongP = p.some(f=>f.c!=='pro');
+  const ok = v.length>=2 && c.length===1 && p.length===1 && !wrongV && !wrongC && !wrongP;
+
+  clearInterval(G.pTick); G.pTick = null;
+
+  if(ok) {
+    G.streak++; G.level++; G.pPassed++;
+    G.pRound = Math.min(G.pRound+1, 3);
+    document.getElementById('sLevel').textContent  = G.level;
+    document.getElementById('sStreak').textContent = G.streak;
+    addScore(50);
+    earnBadge('newbie');
+    earnBadge('plate');
+    if(G.streak>=3) earnBadge('streak');
     openModal('🎉','จัดจานสำเร็จ!','+50 คะแนน','สัดส่วน 2:1:1 ถูกต้องสมบูรณ์! 🥗');
-    setTimeout(()=>{ closeModal(); initPlate(); },3500);
+    setTimeout(()=>{ closeModal(); initPlate(); }, 3500);
   } else {
-    G.streak=0; document.getElementById('sStreak').textContent='0';
-    let msg='❌ ';
-    if(v.length<2||wrongV) msg+='ผักต้อง≥2 ชนิด ';
-    if(c.length!==1||wrongC) msg+='ข้าวต้องพอดี 1 ';
-    if(p.length!==1||wrongP) msg+='โปรตีนต้องพอดี 1 ';
-    openModal('😔','ลองใหม่นะ!','0 คะแนน', msg);
-    setTimeout(()=>{ closeModal(); initPlate(); },3500);
+    G.streak = 0;
+    document.getElementById('sStreak').textContent = '0';
+    let msg = '';
+    if(v.length<2 || wrongV)  msg += '❌ ผักต้องมี≥2 ชนิด ';
+    if(c.length!==1 || wrongC) msg += '❌ ข้าวต้องพอดี 1 ';
+    if(p.length!==1 || wrongP) msg += '❌ โปรตีนต้องพอดี 1 ';
+    openModal('😔','ลองใหม่นะ!','0 คะแนน', msg || 'วางผิดช่อง ลองดูหมวดหมู่อาหารด้วยนะ');
+    setTimeout(()=>{ closeModal(); initPlate(); }, 3500);
   }
 }
 
-/* ══════════════════════════════════
+/* ══════════════════════════════════════
    QUIZ
-══════════════════════════════════ */
-function loadQ(idx){
-  if(idx>=QUIZ.length){ endQuiz(); return; }
-  G.qAnswered=false;
-  const q=QUIZ[idx];
-  document.getElementById('qText').textContent=(idx+1)+'. '+q.q;
-  document.getElementById('qScene').textContent=q.s;
-  document.getElementById('qNo').textContent=idx+1;
-  document.getElementById('qBar').style.width=((idx+1)/QUIZ.length*100)+'%';
-  const opts=document.getElementById('qOpts');
-  opts.innerHTML='';
-  q.o.forEach((opt,i)=>{
-    const b=document.createElement('button');
-    b.className='q-opt'; b.textContent=['A','B','C','D'][i]+'. '+opt;
-    b.onclick=()=>answerQ(i,q,b);
+══════════════════════════════════════ */
+function loadQ(idx) {
+  if(idx >= QUIZ.length) { endQuiz(); return; }
+  G.qAnswered = false;
+  const q = QUIZ[idx];
+  document.getElementById('qText').textContent  = (idx+1)+'. '+q.q;
+  document.getElementById('qScene').textContent = q.s;
+  document.getElementById('qNo').textContent    = idx+1;
+  document.getElementById('qBar').style.width   = ((idx+1)/QUIZ.length*100)+'%';
+
+  const opts = document.getElementById('qOpts');
+  opts.innerHTML = '';
+  q.o.forEach((opt,i) => {
+    const b = document.createElement('button');
+    b.className = 'q-opt';
+    b.textContent = ['A','B','C','D'][i]+'. '+opt;
+    b.onclick = ()=>answerQ(i, q, b);
     opts.appendChild(b);
   });
-  const fb=document.getElementById('qFb');
-  fb.className='fb'; fb.textContent='';
-  document.getElementById('qNext').style.display='none';
+
+  const fb = document.getElementById('qFb');
+  fb.className = 'fb-box'; fb.textContent = '';
+  document.getElementById('qNext').style.display = 'none';
 }
 
-function answerQ(chosen,q,btn){
-  if(G.qAnswered)return;
-  G.qAnswered=true;
-  document.querySelectorAll('.q-opt').forEach((b,i)=>{
-    b.disabled=true;
-    if(i===q.a)b.classList.add('ok');
-    else if(i===chosen)b.classList.add('no');
+function answerQ(chosen, q, btn) {
+  if(G.qAnswered) return;
+  G.qAnswered = true;
+
+  document.querySelectorAll('.q-opt').forEach((b,i) => {
+    b.disabled = true;
+    if(i===q.a)      b.classList.add('ok');
+    else if(i===chosen) b.classList.add('no');
   });
-  const fb=document.getElementById('qFb');
-  if(chosen===q.a){
-    G.qScore+=30; G.streak++; addScore(30);
-    document.getElementById('qPts').textContent=G.qScore;
-    document.getElementById('sStreak').textContent=G.streak;
-    fb.className='fb ok show';
-    fb.innerHTML='✅ <strong>ถูกต้อง! +30 คะแนน</strong><br>'+q.x;
+
+  const fb = document.getElementById('qFb');
+  if(chosen === q.a) {
+    G.qScore += 30; G.streak++;
+    addScore(30);
+    document.getElementById('qPts').textContent    = G.qScore;
+    document.getElementById('sStreak').textContent = G.streak;
+    fb.className = 'fb-box ok show';
+    fb.innerHTML = '✅ <strong>ถูกต้อง! +30 คะแนน</strong><br>'+q.x;
     toast('✅','ถูกต้อง!','+30 คะแนน 🎯');
-    if(G.streak>=3)earnBadge('streak');
+    if(G.streak>=3) earnBadge('streak');
   } else {
-    G.streak=0; document.getElementById('sStreak').textContent='0';
-    fb.className='fb no show';
-    fb.innerHTML='❌ <strong>คำตอบที่ถูก: '+q.o[q.a]+'</strong><br>'+q.x;
+    G.streak = 0;
+    document.getElementById('sStreak').textContent = '0';
+    fb.className = 'fb-box no show';
+    fb.innerHTML = '❌ <strong>คำตอบที่ถูก: '+q.o[q.a]+'</strong><br>'+q.x;
     toast('❌','ไม่ถูก','ลองจำไว้นะ 📚','#ff5050');
   }
-  document.getElementById('qNext').style.display='block';
-  if(G.qScore>=150)earnBadge('quiz');
+
+  document.getElementById('qNext').style.display = 'block';
+  if(G.qScore >= 150) earnBadge('quiz');
 }
 
-function nextQ(){ G.qIdx++; loadQ(G.qIdx); }
+function nextQ() {
+  G.qIdx++;
+  loadQ(G.qIdx);
+}
 
-function endQuiz(){
-  const pct=Math.round(G.qScore/(QUIZ.length*30)*100);
-  document.getElementById('qCard').innerHTML=`
-    <div style="text-align:center;padding:16px">
+function endQuiz() {
+  const pct = Math.round(G.qScore / (QUIZ.length*30) * 100);
+  document.getElementById('qCard').innerHTML = `
+    <div style="text-align:center;padding:20px">
       <div style="font-size:3.5rem">${pct>=80?'🏆':pct>=60?'🌟':'📚'}</div>
       <div style="font-size:1.1rem;font-weight:800;color:var(--green);margin:10px 0 4px">จบควิซแล้ว!</div>
       <div style="font-size:2rem;font-weight:800;color:var(--gold)">${G.qScore} คะแนน</div>
-      <div style="color:rgba(255,255,255,.6);font-size:.82rem;margin-top:6px">${pct}% ${pct>=80?'ยอดเยี่ยม!':pct>=60?'ผ่านได้ดี':'ลองศึกษาเพิ่มนะ'}</div>
+      <div style="color:rgba(255,255,255,.6);font-size:.82rem;margin-top:8px">
+        ${pct}% · ${pct>=80?'ยอดเยี่ยมมาก! 🎉':pct>=60?'ผ่านได้ดี 👍':'ลองศึกษาเพิ่มนะ 📖'}
+      </div>
     </div>`;
-  document.getElementById('qNext').style.display='none';
+  document.getElementById('qNext').style.display = 'none';
   earnBadge('healthy');
 }
 
-function resetQuiz(){
-  G.qIdx=0; G.qScore=0; G.qAnswered=false;
-  document.getElementById('qPts').textContent='0';
-  document.getElementById('qCard').innerHTML=`
-    <div class="q-text" id="qText"></div>
+function resetQuiz() {
+  G.qIdx = 0; G.qScore = 0; G.qAnswered = false;
+  document.getElementById('qPts').textContent = '0';
+  document.getElementById('qCard').innerHTML = `
+    <div class="q-text"  id="qText"></div>
     <div class="q-scene" id="qScene"></div>
-    <div class="q-opts" id="qOpts"></div>
-    <div class="fb" id="qFb"></div>`;
+    <div class="q-opts"  id="qOpts"></div>
+    <div class="fb-box"  id="qFb"></div>`;
   loadQ(0);
 }
 
-/* ══════════════════════════════════
-   RISK
-══════════════════════════════════ */
-function updateRisk(){
-  const s=+document.getElementById('rs-s').value;
-  const f=+document.getElementById('rs-f').value;
-  const sa=+document.getElementById('rs-sa').value;
-  document.getElementById('rv-s').textContent=s;
-  document.getElementById('rv-f').textContent=f;
-  document.getElementById('rv-sa').textContent=sa;
-  const sc=Math.min(s/20*100,100)*0.35+Math.min(f/20*100,100)*0.35+Math.min(sa/5*100,100)*0.3;
-  document.getElementById('gFill').style.width=sc+'%';
-  let r,d,col;
-  if(sc<25)     {r='🟢 ต่ำมาก — สุดยอด!';d='พฤติกรรมการกินดีเยี่ยม!';col='#00ff88';}
-  else if(sc<45){r='🟡 ต่ำ — ดีมาก';d='ยังอยู่ในเกณฑ์ดี คงพฤติกรรมนี้ไว้';col='#88ff00';}
-  else if(sc<60){r='🟠 ปานกลาง — ระวัง!';d='เริ่มเสี่ยง ควรลดลงเล็กน้อย';col='#ffcc00';}
-  else if(sc<80){r='🔴 สูง — อันตราย!';d='มีความเสี่ยง NCDs ควรปรับพฤติกรรมทันที';col='#ff8800';}
-  else          {r='🚨 สูงมาก — เร่งด่วน!';d='ความเสี่ยงสูง แนะนำพบแพทย์';col='#ff3333';}
-  const gr=document.getElementById('gResult');
-  gr.textContent=r; gr.style.color=col;
-  document.getElementById('gDesc').textContent=d;
-  const tips=[];
-  if(s>6) tips.push('🍬 ลดน้ำตาล: เลี่ยงน้ำหวาน เลือกน้ำเปล่า/ผลไม้สด');
-  if(f>6) tips.push('🧈 ลดไขมัน: เลี่ยงของทอด เลือกนึ่ง/ต้ม/ย่าง');
-  if(sa>1)tips.push('🧂 ลดเกลือ: ชิมก่อนปรุง เลี่ยงซอส/น้ำปลา เลือก low-sodium');
-  if(!tips.length)tips.push('✅ ดีมาก! รักษาพฤติกรรมการกินนี้ต่อไป');
-  document.getElementById('rTips').innerHTML=tips.map(t=>`<div class="rtip">${t}</div>`).join('');
+/* ══════════════════════════════════════
+   RISK METER
+══════════════════════════════════════ */
+function updateRisk() {
+  const s  = +document.getElementById('rs-s').value;
+  const f  = +document.getElementById('rs-f').value;
+  const sa = +document.getElementById('rs-sa').value;
+
+  document.getElementById('rv-s').textContent  = s;
+  document.getElementById('rv-f').textContent  = f;
+  document.getElementById('rv-sa').textContent = sa;
+
+  const sc = Math.min(s/20*100,100)*0.35
+           + Math.min(f/20*100,100)*0.35
+           + Math.min(sa/5*100,100)*0.30;
+
+  document.getElementById('gFill').style.width = sc+'%';
+
+  let r, d, col;
+  if(sc<25)      { r='🟢 ต่ำมาก — สุดยอด!';     d='พฤติกรรมการกินดีเยี่ยม!';                col='#00ff88'; }
+  else if(sc<45) { r='🟡 ต่ำ — ดีมาก';           d='ยังอยู่ในเกณฑ์ดี คงพฤติกรรมนี้ไว้';      col='#88ff00'; }
+  else if(sc<60) { r='🟠 ปานกลาง — ระวัง!';      d='เริ่มเสี่ยง ควรลดลงเล็กน้อย';            col='#ffcc00'; }
+  else if(sc<80) { r='🔴 สูง — อันตราย!';         d='มีความเสี่ยง NCDs ควรปรับพฤติกรรมทันที'; col='#ff8800'; }
+  else           { r='🚨 สูงมาก — เร่งด่วน!';    d='แนะนำพบแพทย์และนักโภชนาการ';             col='#ff3333'; }
+
+  const gr = document.getElementById('gResult');
+  gr.textContent = r; gr.style.color = col;
+  document.getElementById('gDesc').textContent = d;
+
+  const tips = [];
+  if(s  > 6) tips.push('🍬 ลดน้ำตาล: เลี่ยงน้ำหวาน ชานม เลือกน้ำเปล่า/ผลไม้สดแทน');
+  if(f  > 6) tips.push('🧈 ลดไขมัน: เลี่ยงของทอด เลือกนึ่ง/ต้ม/ย่าง ดูฉลาก Trans Fat');
+  if(sa > 1) tips.push('🧂 ลดเกลือ: ชิมก่อนปรุง เลี่ยงซอสพร้อมปรุง เลือกผลิตภัณฑ์ Low Sodium');
+  if(!tips.length) tips.push('✅ ดีมาก! รักษาพฤติกรรมการกินนี้ต่อไปเพื่อห่างไกล NCDs');
+
+  document.getElementById('rTips').innerHTML = tips.map(t=>`<div class="rtip">${t}</div>`).join('');
 }
 
-function saveRisk(){
-  if(G.riskSaved){ toast('ℹ️','บันทึกแล้ว','คะแนนถูกบันทึกไปแล้ว','#00ccff'); return; }
-  G.riskSaved=true; addScore(20); earnBadge('healthy');
+function saveRisk() {
+  if(G.riskSaved) {
+    toast('ℹ️','บันทึกแล้ว','คะแนนถูกบันทึกไปแล้ว','#00ccff');
+    return;
+  }
+  G.riskSaved = true;
+  addScore(20);
+  earnBadge('healthy');
   openModal('📊','บันทึกสำเร็จ!','+20 คะแนน','ขอบคุณที่ประเมินความเสี่ยงของคุณ 💪');
 }
 
-/* ══════════════════════════════════
+/* ══════════════════════════════════════
    LEADERBOARD
-══════════════════════════════════ */
-function updateMyLB(){
-  const me=LB_DATA.find(e=>e.me);
-  if(me)me.s=G.score;
-  LB_DATA.sort((a,b)=>b.s-a.s);
-}
-function renderLB(){
-  updateMyLB();
-  const list=document.getElementById('lbList');
-  list.innerHTML='';
-  LB_DATA.forEach((e,i)=>{
-    const d=document.createElement('div');
-    d.className='lb-row'+(e.me?' me':'');
-    const rk=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
-    d.innerHTML=`<div class="lb-rk">${rk}</div><div><div class="lb-nm">${e.n}${e.me?' <span style="color:var(--green);font-size:.7rem">(คุณ)</span>':''}</div><div class="lb-dp">${e.d}</div></div><div class="lb-sc">${e.s.toLocaleString()}</div><div class="lb-bd">${e.b}</div>`;
-    list.appendChild(d);
-  });
-  const rank=LB_DATA.findIndex(e=>e.me)+1;
-  document.getElementById('myRank').textContent='#'+rank;
-  document.getElementById('myScore').textContent=G.score.toLocaleString();
+══════════════════════════════════════ */
+function updateMyLB() {
+  const me = LB.find(e=>e.me);
+  if(me) me.s = G.score;
+  LB.sort((a,b)=>b.s-a.s);
 }
 
-/* ══════════════════════════════════
+function renderLB() {
+  updateMyLB();
+  const list = document.getElementById('lbList');
+  list.innerHTML = '';
+  LB.forEach((e,i) => {
+    const d = document.createElement('div');
+    d.className = 'lb-row' + (e.me?' me':'');
+    const rk = i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
+    d.innerHTML = `
+      <div class="lb-rk">${rk}</div>
+      <div>
+        <div class="lb-nm">${e.n}${e.me?' <span style="color:var(--green);font-size:.7rem">(คุณ)</span>':''}</div>
+        <div class="lb-dp">${e.d}</div>
+      </div>
+      <div class="lb-sc">${e.s.toLocaleString()}</div>
+      <div class="lb-bd">${e.b}</div>`;
+    list.appendChild(d);
+  });
+  const rank = LB.findIndex(e=>e.me) + 1;
+  document.getElementById('myRank').textContent  = '#'+rank;
+  document.getElementById('myScore').textContent = G.score.toLocaleString();
+}
+
+/* ══════════════════════════════════════
    INIT
-══════════════════════════════════ */
+══════════════════════════════════════ */
 updateRisk();
 earnBadge('newbie');
 loadQ(0);
